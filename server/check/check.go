@@ -1,30 +1,39 @@
 package check
 
 import (
-	"errors"
 	"fmt"
 	"github.com/xuri/excelize/v2"
+	"goDemo/model"
 	"goDemo/utils"
+	"io"
 	"log"
 	"strconv"
 	"strings"
 )
 
-func Check() (errs []error) {
-	excelFile, err := excelize.OpenFile("/Users/sxz799/Desktop/济宁兖州店导入模板-固定资产.xlsx")
+func Check(r io.Reader) (errs []model.ErrMsg) {
+	excelFile, err := excelize.OpenReader(r)
+	//excelFile, err := excelize.OpenFile(filename)
 	if err != nil {
-
-		errs = append(errs, err)
+		errs = append(errs, model.ErrMsg{
+			Msg: err.Error(),
+		})
 		return
+	} else {
+		fmt.Println("文件读取成功！")
 	}
-	fmt.Println("文件读取成功！")
-	count := excelFile.SheetCount
 
+	count := excelFile.SheetCount
+	log.Println(count)
 	if count != 1 {
-		errs = append(errs, errors.New("只能有一个sheet页"))
+		errs = append(errs, model.ErrMsg{
+			Msg: "请仅保留一个工作表(如果仍提示此错误,请右键点击左下角现在的工作表并点击`取消隐藏工作表`)",
+		})
 	}
 	list := excelFile.GetSheetList()
-
+	for _, l := range list {
+		fmt.Println(l)
+	}
 	rows, _ := excelFile.GetRows(list[0])
 
 	firstRow := rows[0]
@@ -56,7 +65,9 @@ func Check() (errs []error) {
 			if title == "资产编号" {
 				s := gsidmp[cell]
 				if s != "" {
-					errs = append(errs, errors.New("[资产编号:"+GSID+"]"+"资产编号已存在"))
+					errs = append(errs, model.ErrMsg{
+						Msg: "[资产编号:" + GSID + "]" + "资产编号已存在",
+					})
 				} else {
 					gsidmp[cell] = cell
 				}
@@ -66,7 +77,9 @@ func Check() (errs []error) {
 			if title == "责任人" || title == "使用人" {
 				if strings.Contains(cell, "+") {
 					if capNum != len(strings.Split(cell, "+")) {
-						errs = append(errs, errors.New("[资产编号:"+GSID+"]"+"责任人或使用人数量配置异常！"))
+						errs = append(errs, model.ErrMsg{
+							Msg: "[资产编号:" + GSID + "]" + "责任人或使用人数量配置异常！",
+						})
 					}
 				}
 			}
@@ -74,7 +87,9 @@ func Check() (errs []error) {
 			if ok {
 				err = f(cell)
 				if err != nil {
-					errs = append(errs, errors.New("[资产编号:"+GSID+"]"+title+err.Error()))
+					errs = append(errs, model.ErrMsg{
+						Msg: "[资产编号:" + GSID + "]" + title + err.Error(),
+					})
 				}
 			}
 
@@ -85,14 +100,17 @@ func Check() (errs []error) {
 			ytyf, _ := strconv.Atoi(titleValueMap["已提月份"])
 			wtyf, _ := strconv.Atoi(titleValueMap["未计提月份"])
 			if syyf != ytyf+wtyf {
-				errs = append(errs, errors.New("[资产编号:"+GSID+"]"+"使用月份不等于已提月份加未提月份"))
-				break
+				errs = append(errs, model.ErrMsg{
+					Msg: "[资产编号:" + GSID + "]" + "使用月份不等于已提月份加未提月份",
+				})
+
 			}
 			float, _ := strconv.ParseFloat(titleValueMap["净残值率(%)"], 64)
 			float = float / 100
 			if float >= 1 || float < 0 {
-				errs = append(errs, errors.New("[资产编号:"+GSID+"]"+"净产值率不可大于等于1或小于0"))
-				break
+				errs = append(errs, model.ErrMsg{
+					Msg: "[资产编号:" + GSID + "]" + "净产值率不可大于等于1或小于0",
+				})
 			}
 		}
 

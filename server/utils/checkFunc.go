@@ -8,46 +8,46 @@ import (
 
 func IsCorrectGSID(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	return nil
 }
 func IsCorrectName(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	return nil
 }
 func IsIntNum(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	if strings.Contains(str, ".00") {
 		str = strings.ReplaceAll(str, ".00", "")
 	}
 	_, err := strconv.Atoi(str)
 	if err != nil {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 必须是整数")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 必须是整数")
 	}
 	return nil
 }
 
 func IsCorrectComeFrom(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售"}
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return nil
 	} else {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
 	}
 
 }
 
 func IsCorrectManageType(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	var arrs = []string{"财务管理中心-税控类设备",
 		"物业安全中心-保洁设备",
@@ -65,13 +65,13 @@ func IsCorrectManageType(str string) error {
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return nil
 	} else {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
 	}
 }
 
 func IsCorrectCWType(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	var arrs = []string{"运输工具",
 		"营业设备",
@@ -90,14 +90,14 @@ func IsCorrectCWType(str string) error {
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return nil
 	} else {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
 	}
 
 }
 
 func IsCorrectStatus(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	var arrs = []string{"在用",
 		"在库",
@@ -110,35 +110,35 @@ func IsCorrectStatus(str string) error {
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return nil
 	} else {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
 	}
 }
 
 func IsCorrectJiTi(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	if str == "是" || str == "否" {
 		return nil
 	} else {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 只能填写 是 或者 否")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 只能填写 是 或者 否")
 	}
 }
 
 func IsCorrectBuyDate(str string) error {
 	if len(str) != 8 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 日期格式为20230501")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 日期格式为20230501")
 	}
 	_, err := strconv.Atoi(str)
 	if err != nil {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 日期格式为20230501")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 日期格式为20230501")
 	}
 	return nil
 }
 
 func IsCorrectZJSF(str string) error {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	var arrs = []string{"平均年限法",
 		"工作量法",
@@ -150,22 +150,22 @@ func IsCorrectZJSF(str string) error {
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return nil
 	} else {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 正确内容为 " + strings.Join(arrs, " , "))
 	}
 }
 
 func IsDoubleNum(str string) error {
 
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 不可为空")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 不可为空")
 	}
 	_, err := strconv.ParseFloat(str, 64)
 	if err != nil {
-		return errors.New("异常！错误值-> " + str + "  \n 修改提示: 金额有误")
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 金额有误")
 	}
 	if strings.Contains(str, ".") {
 		if len(str)-strings.Index(str, ".")-1 > 2 {
-			return errors.New("异常！错误值-> " + str + "  \n 修改提示: 金额有误")
+			return errors.New("异常！错误值-> " + str + "  | 修改提示: 金额有误")
 		}
 	}
 	return nil
