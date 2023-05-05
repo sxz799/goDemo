@@ -1,14 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"goDemo/check"
-	"log"
 )
 
 func main() {
 	errs := check.Check()
 	for _, e := range errs {
-		log.Println(e)
+		fmt.Println(e)
 	}
 	// 打开 Excel 文件
 

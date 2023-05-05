@@ -4,8 +4,8 @@ package utils
 var TitleCheckFuncMap = make(map[string]func(str string) error)
 
 func init() {
-	//TitleCheckFuncMap["资产编号"] = IsCorrectComeFrom
-	//TitleCheckFuncMap["资产名称"] = IsCorrectComeFrom
+	TitleCheckFuncMap["资产编号"] = IsCorrectGSID
+	TitleCheckFuncMap["资产名称"] = IsCorrectName
 	TitleCheckFuncMap["资产来源"] = IsCorrectComeFrom
 	TitleCheckFuncMap["管理类别"] = IsCorrectManageType
 	TitleCheckFuncMap["类别名称"] = IsCorrectCWType
