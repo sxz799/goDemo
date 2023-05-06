@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func Check(r io.Reader) (errs []model.ErrMsg) {
+func Check(r io.Reader) (num int, errs []model.ErrMsg) {
 	excelFile, err := excelize.OpenReader(r)
 	//excelFile, err := excelize.OpenFile(filename)
 	if err != nil {
@@ -31,9 +31,6 @@ func Check(r io.Reader) (errs []model.ErrMsg) {
 		})
 	}
 	list := excelFile.GetSheetList()
-	for _, l := range list {
-		fmt.Println(l)
-	}
 	rows, _ := excelFile.GetRows(list[0])
 
 	firstRow := rows[0]
@@ -49,7 +46,7 @@ func Check(r io.Reader) (errs []model.ErrMsg) {
 	var gsidmp = make(map[string]string)
 
 	for i, row := range rows {
-		if row[0] == "" || row[0] == "合计" {
+		if row[0] == "合计" {
 			log.Println("共校验了", i, "行数据")
 			break
 		}
@@ -63,6 +60,11 @@ func Check(r io.Reader) (errs []model.ErrMsg) {
 			titleValueMap[title] = cell
 			//校验资产编码唯一性
 			if title == "资产编号" {
+				if len(strings.ReplaceAll(cell, " ", "")) < 1 {
+					errs = append(errs, model.ErrMsg{
+						Msg: "[资产编号:" + GSID + "]" + "资产编号不可为空",
+					})
+				}
 				s := gsidmp[cell]
 				if s != "" {
 					errs = append(errs, model.ErrMsg{
@@ -75,7 +77,11 @@ func Check(r io.Reader) (errs []model.ErrMsg) {
 			}
 
 			if title == "责任人" || title == "使用人" {
-				if strings.Contains(cell, "+") {
+				if len(strings.ReplaceAll(cell, " ", "")) < 1 {
+					errs = append(errs, model.ErrMsg{
+						Msg: "[资产编号:" + GSID + "]" + "责任人或使用人不可为空！",
+					})
+				} else if strings.Contains(cell, "+") {
 					if capNum != len(strings.Split(cell, "+")) {
 						errs = append(errs, model.ErrMsg{
 							Msg: "[资产编号:" + GSID + "]" + "责任人或使用人数量配置异常！",
@@ -88,11 +94,83 @@ func Check(r io.Reader) (errs []model.ErrMsg) {
 				err = f(cell)
 				if err != nil {
 					errs = append(errs, model.ErrMsg{
-						Msg: "[资产编号:" + GSID + "]" + title + err.Error(),
+						Msg: "[资产编号:" + GSID + "] *" + title + "*" + err.Error(),
 					})
 				}
 			}
 
+		}
+
+		mkt, ok := titleValueMap["单位名称"]
+		if ok {
+			err := utils.IsCorrectMKT(mkt)
+			if err != nil {
+				errs = append(errs, model.ErrMsg{
+					Msg: "[资产编号:" + GSID + "] *单位名称*" + err.Error(),
+				})
+			} else {
+				err = utils.IsCorrectDept(titleValueMap["部门名称"], mkt)
+				if err != nil {
+					errs = append(errs, model.ErrMsg{
+						Msg: "[资产编号:" + GSID + "] *部门名称*" + err.Error(),
+					})
+				}
+				err = utils.IsCorrectDept(titleValueMap["使用部门"], mkt)
+				if err != nil {
+					errs = append(errs, model.ErrMsg{
+						Msg: "[资产编号:" + GSID + "] *使用部门*" + err.Error(),
+					})
+				}
+
+				users, ok := titleValueMap["责任人"]
+				if ok {
+					if strings.Contains(users, "+") {
+						for _, user := range strings.Split(users, "+") {
+							err = utils.IsCorrectUser(user, mkt)
+							if err != nil {
+								errs = append(errs, model.ErrMsg{
+									Msg: "[资产编号:" + GSID + "] *责任人*" + err.Error(),
+								})
+							}
+						}
+					} else {
+						err = utils.IsCorrectUser(users, mkt)
+						if err != nil {
+							errs = append(errs, model.ErrMsg{
+								Msg: "[资产编号:" + GSID + "] *责任人*" + err.Error(),
+							})
+						}
+					}
+
+				}
+
+				users2, ok := titleValueMap["使用人"]
+				if ok {
+					if strings.Contains(users2, "+") {
+						for _, user := range strings.Split(users2, "+") {
+							err = utils.IsCorrectUser(user, mkt)
+							if err != nil {
+								errs = append(errs, model.ErrMsg{
+									Msg: "[资产编号:" + GSID + "] *使用人*" + err.Error(),
+								})
+							}
+						}
+					} else {
+						err = utils.IsCorrectUser(users2, mkt)
+						if err != nil {
+							errs = append(errs, model.ErrMsg{
+								Msg: "[资产编号:" + GSID + "] *使用人*" + err.Error(),
+							})
+						}
+					}
+
+				}
+			}
+
+		} else {
+			errs = append(errs, model.ErrMsg{
+				Msg: "[资产编号:" + GSID + "]" + "单位名称不可为空",
+			})
 		}
 
 		if titleValueMap["是否计提折旧"] == "是" {
@@ -115,5 +193,7 @@ func Check(r io.Reader) (errs []model.ErrMsg) {
 		}
 
 	}
+	log.Println("校验完毕")
+	num = len(rows)
 	return
 }

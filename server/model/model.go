@@ -9,3 +9,13 @@ type Response struct {
 	Msg     string   `json:"msg"`
 	ErrMsgs []ErrMsg `json:"errMsgs"`
 }
+
+type Dept struct {
+	Name string
+	Code string
+	Mkt  string
+}
+type User struct {
+	Name string
+	Mkt  string
+}

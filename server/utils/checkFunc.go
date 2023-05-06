@@ -172,13 +172,38 @@ func IsDoubleNum(str string) error {
 }
 
 func IsCorrectMKT(str string) error {
-	return nil
+	rows, err := DB.Raw("select 1 from depts where mkt=? limit 1", str).Rows()
+	if err != nil {
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 门店查询失败")
+	}
+	if rows.Next() {
+		return nil
+	} else {
+		return errors.New("异常！错误值-> " + str + "  | 修改提示: 没有找到该门店")
+	}
+
 }
 
-func IsCorrectDept(str string) error {
-	return nil
+func IsCorrectDept(dept, mkt string) error {
+	rows, err := DB.Raw("select 1 from depts where name=? and mkt=? limit 1", dept, mkt).Rows()
+	if err != nil {
+		return errors.New("异常！错误值-> " + dept + "  | 修改提示: 部门查询失败")
+	}
+	if rows.Next() {
+		return nil
+	} else {
+		return errors.New("异常！错误值-> " + dept + "  | 修改提示: " + mkt + "里没有找到该部门")
+	}
 }
 
-func IsCorrectUser(str string) error {
-	return nil
+func IsCorrectUser(name, mkt string) error {
+	rows, err := DB.Raw("select 1 from users where name=? and mkt=? limit 1", name, mkt).Rows()
+	if err != nil {
+		return errors.New("异常！错误值-> " + name + "  | 修改提示: 用户查询失败")
+	}
+	if rows.Next() {
+		return nil
+	} else {
+		return errors.New("异常！错误值-> " + name + "  | 修改提示: " + mkt + "内无此用户")
+	}
 }
