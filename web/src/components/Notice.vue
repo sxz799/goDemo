@@ -1,14 +1,15 @@
 <template>
-  <h1 style="color: #42b983">为了节省导入时间和提高效率,统一在此处进行excel表格的初步格式检测</h1>
+  <h2 style="color: #3260c5">为了节省导入时间和提高效率,在此处进行excel表格的初步格式检测</h2>
   <a-collapse>
     <a-collapse-panel key="1" header="第一步 删除多余的sheet页">
       <a-image :width="200" :src="delsheet"/>
     </a-collapse-panel>
-    <a-collapse-panel key="2" header="第二步 设置行高">
-      <a-image :width="200" :src="sethanggao"/>
-    </a-collapse-panel>
-    <a-collapse-panel key="3" header="第三步 设置列宽" >
+    <a-collapse-panel key="2" header="第二步 设置列宽">
       <a-image :width="200" :src="setliekuan"/>
+
+    </a-collapse-panel>
+    <a-collapse-panel key="3" header="第三步 设置行高" >
+      <a-image :width="200" :src="sethanggao"/>
     </a-collapse-panel>
 
     <a-collapse-panel key="4" header="第四步 设置单元格格式" >

@@ -12,12 +12,12 @@
             <p class="ant-upload-drag-icon">
               <inbox-outlined></inbox-outlined>
             </p>
-            <p style="color: #ea073a" class="ant-upload-text">点击此处或拖拽文件到这里进行检测</p>
+            <p style="color: #ea073a" class="ant-upload-text">点击这里 或 将文件拖拽到这里 进行检测</p>
           </a-upload-dragger>
-          <h4 style="color: #0bded5">powered by sxz799</h4>
-          <a-button type="primary" @click="showNotice">查看使用说明</a-button>
+          <h4 style="color: #bc08ef" @click="showNotice">powered by sxz799(点我查看使用说明)</h4>
+
           <a-divider orientation="center"></a-divider>
-          <a-table :columns="columns" :data-source="tableData"></a-table>
+          <a-table :locale="tableLocale" :columns="columns" :data-source="tableData"></a-table>
         </a-card>
       </div>
     </a-col>
@@ -56,7 +56,11 @@ export default defineComponent({
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
       class: 'test',
     };
+    const  tableLocale={
+      emptyText: '暂无数据'
+    };
     return {
+      tableLocale,
       visible:false,
       uploadApi: "/api/upload",
       progress,
