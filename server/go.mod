@@ -1,4 +1,4 @@
-module goDemo
+module gsCheck
 
 go 1.20
 

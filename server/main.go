@@ -2,19 +2,19 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"goDemo/check"
-	"goDemo/model"
+	"gsCheck/check"
+	"gsCheck/model"
 	"strconv"
 )
 
 func main() {
 	r := gin.Default()
 
-	//r.LoadHTMLGlob("dist/index.html")
-	//r.Static("/dist", "dist")
-	//r.GET("/", func(context *gin.Context) {
-	//	context.HTML(200, "index.html", "")
-	//})
+	r.LoadHTMLGlob("dist/index.html")
+	r.Static("/dist", "dist")
+	r.GET("/", func(context *gin.Context) {
+		context.HTML(200, "index.html", "")
+	})
 
 	r.POST("/api/upload", func(c *gin.Context) {
 		file, _ := c.FormFile("file")

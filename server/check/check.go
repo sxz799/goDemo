@@ -3,8 +3,8 @@ package check
 import (
 	"fmt"
 	"github.com/xuri/excelize/v2"
-	"goDemo/model"
-	"goDemo/utils"
+	"gsCheck/model"
+	"gsCheck/utils"
 	"io"
 	"log"
 	"strconv"

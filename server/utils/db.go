@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"goDemo/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gsCheck/model"
 )
 
 var DB *gorm.DB
