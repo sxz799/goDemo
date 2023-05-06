@@ -14,31 +14,38 @@
             </p>
             <p style="color: #ea073a" class="ant-upload-text">点击此处或拖拽文件到这里进行检测</p>
           </a-upload-dragger>
-
           <h4 style="color: #0bded5">powered by sxz799</h4>
+          <a-button type="primary" @click="showNotice">查看使用说明</a-button>
           <a-divider orientation="center"></a-divider>
           <a-table :columns="columns" :data-source="tableData"></a-table>
         </a-card>
-
-
       </div>
-
-
     </a-col>
     <a-col :flex="5"></a-col>
   </a-row>
+
+  <a-modal
+      :width="1000"
+      v-model:visible="visible"
+      title="使用说明"
+      okText="知道了"
+      cancel-text=" "
+      @ok="handleOk">
+    <Notice/>
+  </a-modal>
 </template>
 
 <script>
 
 import {CopyOutlined, DownloadOutlined, InboxOutlined} from '@ant-design/icons-vue';
 import {message} from 'ant-design-vue';
-import {defineComponent} from 'vue';
-
+import {defineComponent,ref} from 'vue';
+import Notice from './Notice.vue'
 export default defineComponent({
   components: {
-    InboxOutlined, DownloadOutlined, CopyOutlined
+    InboxOutlined, DownloadOutlined, CopyOutlined,Notice
   },
+
   data() {
     const progress = {
       strokeColor: {
@@ -50,6 +57,7 @@ export default defineComponent({
       class: 'test',
     };
     return {
+      visible:false,
       uploadApi: "/api/upload",
       progress,
       handleChange: e => {
@@ -75,6 +83,15 @@ export default defineComponent({
           key: "msg"
         },
       ],
+    }
+
+  },
+  methods:{
+    handleOk() {
+      this.visible = false;
+    },
+    showNotice(){
+      this.visible = true;
     }
   }
 })

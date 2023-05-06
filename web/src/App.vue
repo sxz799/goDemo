@@ -1,5 +1,4 @@
 <template>
-
   <Check />
 </template>
 

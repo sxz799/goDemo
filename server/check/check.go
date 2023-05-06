@@ -33,7 +33,7 @@ func Check(r io.Reader) (num int, errs []model.ErrMsg) {
 	list := excelFile.GetSheetList()
 	rows, _ := excelFile.GetRows(list[0])
 
-	firstRow := rows[0]
+	firstRow := rows[2]
 
 	indexTitleMap := make(map[int]string)
 
@@ -41,7 +41,7 @@ func Check(r io.Reader) (num int, errs []model.ErrMsg) {
 		indexTitleMap[i] = cell
 	}
 
-	rows = rows[1:]
+	rows = rows[3:]
 
 	var gsidmp = make(map[string]string)
 
