@@ -5,6 +5,7 @@ import (
 	"gsCheck/check"
 	"gsCheck/model"
 	"strconv"
+	"time"
 )
 
 func main() {
@@ -19,20 +20,41 @@ func main() {
 	r.POST("/api/upload", func(c *gin.Context) {
 		file, _ := c.FormFile("file")
 		open, _ := file.Open()
+		before := time.Now()
 		num, errs := check.Check(open)
-		extMsg := "[本次共校验" + strconv.Itoa(num) + "行数据]"
+		after := time.Now()
+		duration := after.Sub(before)
+
+		extMsg := " [本次共校验" + strconv.Itoa(num) + "行数据,共计耗时" + strconv.FormatInt(duration.Milliseconds(), 10) + "ms]"
 		if len(errs) == 0 {
 			c.JSON(200, model.Response{
-				Success: true,
-				Msg:     "恭喜您,文件校验通过!" + extMsg,
-				ErrMsgs: errs,
+				Success:  true,
+				Msg:      "恭喜您,文件校验通过!" + extMsg,
+				ErrInfos: errs,
 			})
 		} else {
-			c.JSON(200, model.Response{
-				Success: false,
-				Msg:     "很遗憾,文件还有" + strconv.Itoa(len(errs)) + "个错误要修改!" + extMsg,
-				ErrMsgs: errs,
-			})
+
+			switch {
+			case len(errs) >= 20:
+				c.JSON(200, model.Response{
+					Success:  false,
+					Msg:      "很遗憾,文件还有" + strconv.Itoa(len(errs)) + "个错误要修改-_-!" + extMsg,
+					ErrInfos: errs,
+				})
+			case len(errs) < 20 && len(errs) > 10:
+				c.JSON(200, model.Response{
+					Success:  false,
+					Msg:      "努努力,就还剩" + strconv.Itoa(len(errs)) + "个错误了!" + extMsg,
+					ErrInfos: errs,
+				})
+			case len(errs) < 10:
+				c.JSON(200, model.Response{
+					Success:  false,
+					Msg:      "加把劲,还有最后" + strconv.Itoa(len(errs)) + "个错误了!" + extMsg,
+					ErrInfos: errs,
+				})
+			}
+
 		}
 
 	})

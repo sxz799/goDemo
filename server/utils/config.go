@@ -1,7 +1,9 @@
 package utils
 
+import "gsCheck/model"
+
 // TitleCheckFuncMap 标题和对应的校验函数关系
-var TitleCheckFuncMap = make(map[string]func(str string) error)
+var TitleCheckFuncMap = make(map[string]func(str string) (bool, model.ErrInfo))
 
 func init() {
 	TitleCheckFuncMap["资产编号"] = IsCorrectGSID

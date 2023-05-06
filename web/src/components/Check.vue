@@ -1,7 +1,7 @@
 <template>
   <a-row type="flex">
-    <a-col :flex="5"></a-col>
-    <a-col :flex="5">
+    <a-col :span="2"></a-col>
+    <a-col :span="20">
       <div style="padding-inline: 20%;">
         <a-card style="text-align: center">
           <h2 style="color: darkgreen">excel格式检测小工具</h2>
@@ -21,7 +21,7 @@
         </a-card>
       </div>
     </a-col>
-    <a-col :flex="5"></a-col>
+    <a-col :span="2"></a-col>
   </a-row>
 
   <a-modal
@@ -66,25 +66,31 @@ export default defineComponent({
       progress,
       handleChange: e => {
         if (e.file.status === 'done') {
-
-
           if (e.file.response.success) {
             message.success(e.file.response.msg)
           }else {
             message.error(e.file.response.msg)
           }
            this.tableData=[]
-           this.tableData=e.file.response.errMsgs
-
-
+           this.tableData=e.file.response.errInfos
         }
       },
       tableData: [],
       columns: [
         {
-          title: "错误提醒",
-          dataIndex: "msg",
-          key: "msg"
+          title: "行号",
+          dataIndex: "line",
+          key: "line"
+        },
+        {
+          title: "错误信息",
+          dataIndex: "errorMsg",
+          key: "errorMsg"
+        },
+        {
+          title: "修改提醒",
+          dataIndex: "fixMsg",
+          key: "fixMsg"
         },
       ],
     }

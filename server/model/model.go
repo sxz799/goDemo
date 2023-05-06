@@ -1,13 +1,15 @@
 package model
 
-type ErrMsg struct {
-	Msg string `json:"msg"`
+type ErrInfo struct {
+	Line     int    `json:"line"`
+	ErrorMsg string `json:"errorMsg"`
+	FixMsg   string `json:"fixMsg"`
 }
 
 type Response struct {
-	Success bool     `json:"success"`
-	Msg     string   `json:"msg"`
-	ErrMsgs []ErrMsg `json:"errMsgs"`
+	Success  bool      `json:"success"`
+	Msg      string    `json:"msg"`
+	ErrInfos []ErrInfo `json:"errInfos"`
 }
 
 type Dept struct {
