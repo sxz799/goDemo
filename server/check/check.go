@@ -17,7 +17,7 @@ func Check(r io.Reader) (num int, errs []model.ErrInfo) {
 	if err != nil {
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: err.Error(),
-			FixMsg:   "文件读取失败,请按照提醒导出为xlsx格式的文件",
+			FixMsg:   "文件读取失败,请按照使用说明导出格式为xlsx的文件进行检测",
 		})
 		return
 	} else {
@@ -148,6 +148,7 @@ func Check(r io.Reader) (num int, errs []model.ErrInfo) {
 							correct, errInfo = utils.IsCorrectUser(user, mkt)
 							if !correct {
 								errInfo.Line = index + 4
+								errInfo.ErrorMsg = "责任人" + errInfo.ErrorMsg
 								errs = append(errs, errInfo)
 							}
 						}
@@ -156,6 +157,7 @@ func Check(r io.Reader) (num int, errs []model.ErrInfo) {
 						if !correct {
 							if !correct {
 								errInfo.Line = index + 4
+								errInfo.ErrorMsg = "责任人" + errInfo.ErrorMsg
 								errs = append(errs, errInfo)
 							}
 						}
@@ -171,6 +173,7 @@ func Check(r io.Reader) (num int, errs []model.ErrInfo) {
 							if !correct {
 								if !correct {
 									errInfo.Line = index + 4
+									errInfo.ErrorMsg = "使用人" + errInfo.ErrorMsg
 									errs = append(errs, errInfo)
 								}
 							}
@@ -180,6 +183,7 @@ func Check(r io.Reader) (num int, errs []model.ErrInfo) {
 						if !correct {
 							if !correct {
 								errInfo.Line = index + 4
+								errInfo.ErrorMsg = "使用人" + errInfo.ErrorMsg
 								errs = append(errs, errInfo)
 							}
 						}

@@ -4,7 +4,7 @@
     <a-col :span="20">
       <div style="padding-inline: 20%;">
         <a-card style="text-align: center">
-          <h2 style="color: darkgreen">excel格式检测小工具</h2>
+          <h2 style="color: #0034ff">资产系统导入模板检验工具</h2>
 
           <a-upload-dragger :progress="progress" name="file"
                             :showUploadList="false"
@@ -27,10 +27,15 @@
   <a-modal
       :width="1000"
       v-model:visible="visible"
+      :maskClosable="false"
+      :closable="false"
+      :keyboard="false"
       title="使用说明"
       okText="知道了"
-      cancel-text=" "
-      @ok="handleOk">
+      cancel-text="不再提醒"
+      @ok="handleOk"
+      @cancel="handleHidden"
+  >
     <Notice/>
   </a-modal>
 </template>
@@ -39,14 +44,16 @@
 
 import {CopyOutlined, DownloadOutlined, InboxOutlined} from '@ant-design/icons-vue';
 import {message} from 'ant-design-vue';
-import {defineComponent,ref} from 'vue';
+import {defineComponent, ref} from 'vue';
 import Notice from './Notice.vue'
+
 export default defineComponent({
   components: {
-    InboxOutlined, DownloadOutlined, CopyOutlined,Notice
+    InboxOutlined, DownloadOutlined, CopyOutlined, Notice
   },
 
   data() {
+
     const progress = {
       strokeColor: {
         '0%': '#108ee9',
@@ -56,23 +63,23 @@ export default defineComponent({
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
       class: 'test',
     };
-    const  tableLocale={
+    const tableLocale = {
       emptyText: '暂无数据'
     };
     return {
       tableLocale,
-      visible:false,
+      visible: localStorage.getItem("showAgain") != "N",
       uploadApi: "/api/upload",
       progress,
       handleChange: e => {
         if (e.file.status === 'done') {
           if (e.file.response.success) {
             message.success(e.file.response.msg)
-          }else {
+          } else {
             message.error(e.file.response.msg)
           }
-           this.tableData=[]
-           this.tableData=e.file.response.errInfos
+          this.tableData = []
+          this.tableData = e.file.response.errInfos
         }
       },
       tableData: [],
@@ -96,11 +103,15 @@ export default defineComponent({
     }
 
   },
-  methods:{
+  methods: {
     handleOk() {
       this.visible = false;
     },
-    showNotice(){
+    handleHidden() {
+      this.visible = false;
+      localStorage.setItem("showAgain", "N")
+    },
+    showNotice() {
       this.visible = true;
     }
   }
