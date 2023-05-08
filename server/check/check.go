@@ -103,7 +103,6 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 		if row[0] == "合计" {
 			break
 		}
-		capNum := 0
 		GSID := ""
 		titleValueMap := make(map[string]string)
 		// 遍历该行中的所有单元格
@@ -131,25 +130,6 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 				} else {
 					gsidmp[cell] = cell
 				}
-
-			}
-
-			if title == "责任人" || title == "使用人" {
-				if len(strings.ReplaceAll(cell, " ", "")) < 1 {
-					errs = append(errs, model.ErrInfo{
-						Line:     index + 4,
-						ErrorMsg: "责任人或使用人不可为空！",
-						FixMsg:   "填入责任或使用人信息",
-					})
-				} else if strings.Contains(cell, "+") {
-					if capNum != len(strings.Split(cell, "+")) {
-						errs = append(errs, model.ErrInfo{
-							Line:     index + 4,
-							ErrorMsg: "责任人或使用人数量配置异常！",
-							FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
-						})
-					}
-				}
 			}
 			f, ok := utils.TitleCheckFuncMap[title]
 			if ok {
@@ -162,6 +142,8 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 			}
 
 		}
+		tNum := titleValueMap["资产数量"]
+		capNum, _ := strconv.Atoi(tNum)
 
 		mkt, ok := titleValueMap["单位名称"]
 		if ok {
@@ -187,6 +169,13 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 				users, ok := titleValueMap["责任人"]
 				if ok {
 					if strings.Contains(users, "+") {
+						if capNum != len(strings.Split(users, "+")) {
+							errs = append(errs, model.ErrInfo{
+								Line:     index + 4,
+								ErrorMsg: "责任人数量配置异常！",
+								FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
+							})
+						}
 						for _, user := range strings.Split(users, "+") {
 							correct, errInfo = utils.IsCorrectUser(user, mkt)
 							if !correct {
@@ -211,6 +200,13 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 				users2, ok := titleValueMap["使用人"]
 				if ok {
 					if strings.Contains(users2, "+") {
+						if capNum != len(strings.Split(users2, "+")) {
+							errs = append(errs, model.ErrInfo{
+								Line:     index + 4,
+								ErrorMsg: "使用人数量配置异常！",
+								FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
+							})
+						}
 						for _, user := range strings.Split(users2, "+") {
 							correct, errInfo = utils.IsCorrectUser(user, mkt)
 							if !correct {
