@@ -36,6 +36,13 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		}
 		sheets := excelFile.GetSheetList()
 		rows, _ = excelFile.GetRows(sheets[0])
+		if len(rows) < 4 {
+			errs = append(errs, model.ErrInfo{
+				ErrorMsg: "格式不正确",
+				FixMsg:   "至少在第4行要有数据",
+			})
+			return
+		}
 	case "xls":
 		var buf bytes.Buffer
 		_, err := io.Copy(&buf, r) // 将 io.Reader 对象读取到缓冲区中
@@ -57,6 +64,13 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		}
 		sheet := excelFile.GetSheet(0)
 		maxRow := sheet.MaxRow
+		if maxRow < 4 {
+			errs = append(errs, model.ErrInfo{
+				ErrorMsg: "格式不正确",
+				FixMsg:   "至少在第4行要有数据",
+			})
+			return
+		}
 		row := sheet.Row(3)
 		lastCol := row.LastCol()
 		for strings.ReplaceAll(row.Col(lastCol), " ", "") == "" {

@@ -18,11 +18,11 @@ func init() {
 	TitleCheckFuncMap["累计折旧"] = IsDoubleNum
 	TitleCheckFuncMap["折旧方法"] = IsCorrectZJSF
 	TitleCheckFuncMap["资产数量"] = IsIntNum
-	TitleCheckFuncMap["净残值率(%)"] = IsDoubleNum
+	TitleCheckFuncMap["净残值率(%)"] = IsCorrectRate
 	TitleCheckFuncMap["净残值"] = IsDoubleNum
-	//TitleCheckFuncMap["月折旧率(%)"] = IsDoubleNum
+	TitleCheckFuncMap["月折旧率(%)"] = IsCorrectRate
 	TitleCheckFuncMap["月折旧额"] = IsDoubleNum
-	//TitleCheckFuncMap["年折旧率(%)"] = IsDoubleNum
+	TitleCheckFuncMap["年折旧率(%)"] = IsCorrectRate
 	TitleCheckFuncMap["年折旧额"] = IsDoubleNum
 	//TitleCheckFuncMap["部门名称"] = IsCorrectDept
 	//TitleCheckFuncMap["责任人"] = IsCorrectUser
@@ -34,7 +34,7 @@ func init() {
 	//TitleCheckFuncMap["使用部门"] = IsCorrectDept
 	//TitleCheckFuncMap["使用人"] = IsCorrectUser
 	TitleCheckFuncMap["使用月份"] = IsIntNum
-	//TitleCheckFuncMap["计量单位"] = IsCorrectComeFrom
-	//TitleCheckFuncMap["备注"] = IsCorrectComeFrom
+	//TitleCheckFuncMap["计量单位"] =
+	//TitleCheckFuncMap["备注"] =
 	TitleCheckFuncMap["实际数量"] = IsIntNum
 }
