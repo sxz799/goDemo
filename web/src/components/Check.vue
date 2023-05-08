@@ -8,6 +8,7 @@
 
           <a-upload-dragger :progress="progress" name="file"
                             :showUploadList="false"
+                            accept=".xls,.xlsx"
                             :multiple="false" :action="uploadApi" @change="handleChange">
             <p class="ant-upload-drag-icon">
               <inbox-outlined></inbox-outlined>

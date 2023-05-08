@@ -3,6 +3,7 @@ module gsCheck
 go 1.20
 
 require (
+	github.com/extrame/xls v0.0.1
 	github.com/gin-gonic/gin v1.9.0
 	github.com/xuri/excelize/v2 v2.7.1
 	gorm.io/driver/sqlite v1.5.0
@@ -12,6 +13,7 @@ require (
 require (
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
+	github.com/extrame/ole2 v0.0.0-20160812065207-d69429661ad7 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect

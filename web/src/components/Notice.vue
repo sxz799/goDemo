@@ -22,10 +22,7 @@
     <a-collapse-panel key="5" header="第五步 合并前两行(★必做★)" >
       <a-image :width="200" :src="settop2row"/>
     </a-collapse-panel>
-    <a-collapse-panel key="6" header="第六步 导出xlsx文件(★必做★)" >
-      <a-image :width="200" :src="exportxlsx"/>
-    </a-collapse-panel>
-    <a-collapse-panel key="7" header="第七步 将导出的文件拖进窗口进行检测" >
+    <a-collapse-panel key="7" header="第六步 将文件拖进窗口进行检测" >
     </a-collapse-panel>
   </a-collapse>
 
@@ -40,7 +37,7 @@ import setliekuan from '@/images/setliekuan.png'
 import setcell1 from '@/images/setcell1.png'
 import setcell2 from '@/images/setcell2.png'
 import settop2row from '@/images/settop2row.png'
-import exportxlsx from '@/images/exportxlsx.png'
+
 
 export default {
   name: "Notice",
@@ -52,7 +49,6 @@ export default {
       setcell1: setcell1,
       setcell2: setcell2,
       settop2row: settop2row,
-      exportxlsx: exportxlsx,
     }
 
   }

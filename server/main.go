@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gsCheck/check"
 	"gsCheck/model"
+	"os"
 	"strconv"
 	"time"
 )
@@ -11,17 +12,30 @@ import (
 func main() {
 	r := gin.Default()
 
-	//r.LoadHTMLGlob("dist/index.html")
-	//r.Static("/dist", "dist")
-	//r.GET("/", func(context *gin.Context) {
-	//	context.HTML(200, "index.html", "")
-	//})
+	_, err := os.Stat("dist")
+	if err == nil {
+		r.LoadHTMLGlob("dist/index.html")
+		r.Static("/dist", "dist")
+		r.GET("/", func(context *gin.Context) {
+			context.HTML(200, "index.html", "")
+		})
+	}
 
 	r.POST("/api/upload", func(c *gin.Context) {
 		file, _ := c.FormFile("file")
 		open, _ := file.Open()
 		before := time.Now()
-		num, errs := check.Check(open)
+
+		fileType := ""
+
+		filename := file.Filename
+		switch {
+		case filename[len(filename)-4:] == ".xls":
+			fileType = "xls"
+		case filename[len(filename)-4:] == "xlsx":
+			fileType = "xlsx"
+		}
+		num, errs := check.PreCheck(fileType, open)
 		after := time.Now()
 		duration := after.Sub(before)
 
