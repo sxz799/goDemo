@@ -11,7 +11,7 @@ module.exports = defineConfig({
     }
   },
   transpileDependencies: true,
-  publicPath: "/dist", //加上这一行即可
+  //publicPath: "/dist", //加上这一行即可
   devServer: {
     port: 4001,
     proxy: {

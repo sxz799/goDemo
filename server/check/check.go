@@ -8,7 +8,6 @@ import (
 	"gsCheck/model"
 	"gsCheck/utils"
 	"io"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -31,7 +30,7 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		if count != 1 {
 			errs = append(errs, model.ErrInfo{
 				ErrorMsg: "sheet工作表太多",
-				FixMsg:   "请仅保留一个工作表(如果仍提示此错误,请右键点击左下角现在的工作表并点击`取消隐藏工作表`)",
+				FixMsg:   "请仅保留一个工作表,当前文件有" + strconv.Itoa(count) + "个sheet表(如果仍提示此错误,请右键点击左下角现在的工作表并点击`取消隐藏工作表`)",
 			})
 		}
 		sheets := excelFile.GetSheetList()
@@ -59,7 +58,7 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		if count != 1 {
 			errs = append(errs, model.ErrInfo{
 				ErrorMsg: "sheet工作表太多",
-				FixMsg:   "请仅保留一个工作表(如果仍提示此错误,请右键点击左下角现在的工作表并点击`取消隐藏工作表`)",
+				FixMsg:   "请仅保留一个工作表,当前文件有" + strconv.Itoa(count) + "个sheet表(如果仍提示此错误,请右键点击左下角现在的工作表并点击`取消隐藏工作表`)",
 			})
 		}
 		sheet := excelFile.GetSheet(0)
@@ -98,8 +97,10 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		return
 	}
 
-	n, infos := check(rows)
-	return n, infos
+	n, errs2 := check(rows)
+	errs = append(errs, errs2...)
+	num = num + n
+	return
 }
 
 func check(rows [][]string) (num int, errs []model.ErrInfo) {
@@ -278,7 +279,6 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 		}
 
 	}
-	log.Println("校验完毕")
 	num = len(rows)
 	return
 }
