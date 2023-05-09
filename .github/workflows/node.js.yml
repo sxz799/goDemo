@@ -29,10 +29,13 @@ jobs:
     - name: Build
       run: npm install && npm run build
       working-directory: ./web
-      
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v2.1.1
-      with:
-       name: my-artifact
-       path: ${{ github.workspace }}/
+
+    - name: Show
+      run: ls ${{ github.workspace }}/
+    
+#     - name: Download a Build Artifact
+#       uses: actions/download-artifact@v2.1.1
+#       with:
+#        name: my-artifact
+#        path: ${{ github.workspace }}/
     
