@@ -23,9 +23,7 @@ jobs:
     - name: Build Server
       run:  go build -v -o bin/gscheck .
       working-directory: ./server
-
-    - name: Move Server File
-      run:  mv bin/gscheck gsCheck/
+      
 
 
     - name: Use Node.js ${{ matrix.node-version }}
@@ -37,8 +35,10 @@ jobs:
       run: npm install && npm run build
       working-directory: ./web
 
-    - name: Move Web File
-      run:  mv server/dist gsCheck/dist/
+    - name: Move  Files
+      run: |
+        mv server/bin/gscheck gsCheck/
+        mv web/dist gsCheck/dist/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
