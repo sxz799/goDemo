@@ -272,12 +272,12 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 			}
 			float, _ := strconv.ParseFloat(titleValueMap["净残值率(%)"], 64)
 			float = float / 100
-			if float >= 1 || float < 0 {
+			if float == 1 {
 
 				errs = append(errs, model.ErrInfo{
 					Line:     index + 4,
-					ErrorMsg: "净产值率错误",
-					FixMsg:   "净产值率不可大于等于1或小于0",
+					ErrorMsg: "净残值率错误",
+					FixMsg:   "净残值率在计提折旧时不可等于100%",
 				})
 			}
 		}

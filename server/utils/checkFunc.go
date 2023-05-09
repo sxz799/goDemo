@@ -67,10 +67,10 @@ func IsCorrectRate(str string) (bool, model.ErrInfo) {
 			FixMsg:   "请填写数字类型",
 		}
 	}
-	if rate >= 100 || rate < 0 {
+	if rate > 100 || rate < 0 {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + str,
-			FixMsg:   "值不可大于等于100或小于0",
+			FixMsg:   "值不可大于100%或小于0",
 		}
 	}
 	// if strings.Contains(str, ".") {

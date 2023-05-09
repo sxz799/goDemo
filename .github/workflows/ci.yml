@@ -45,6 +45,7 @@ jobs:
         mkdir gsCheck
         mv server/bin/app gsCheck/
         mv web/dist gsCheck/dist/
+        chmod +x server/bin/app
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
