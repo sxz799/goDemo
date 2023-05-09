@@ -26,7 +26,7 @@ jobs:
         go-version: 1.19
 
     - name: Build Server
-      run:  go build -v -o bin/app .
+      run:  go build -ldflags="-s -w" -o bin/app .
       working-directory: ./server
       
 
