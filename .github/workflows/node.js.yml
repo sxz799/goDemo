@@ -28,14 +28,16 @@ jobs:
     - name: Build
       run: npm install && npm run build
       working-directory: ./web
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-       name: dist
+       name: dist-artifact
        path: ${{ github.workspace }}/web/dist
+
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.1.1
       with:
-       name: dist
+       name: dist-artifact
        path: ${{ github.workspace }}/web/dist
     
