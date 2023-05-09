@@ -115,7 +115,7 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 	var gsidmp = make(map[string]string)
 
 	for index, row := range rows {
-		if row[0] == "合计" {
+		if strings.Contains(row[0], "合计") {
 			break
 		}
 		GSID := ""
@@ -123,7 +123,6 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 		// 遍历该行中的所有单元格
 		for k, cell := range row {
 			title := indexTitleMap[k]
-
 			titleValueMap[title] = cell
 			//校验资产编码唯一性
 			if title == "资产编号" {
@@ -133,18 +132,20 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 						ErrorMsg: "资产编号错误",
 						FixMsg:   "资产编号不可为空",
 					})
-				}
-				GSID = cell
-				_, ok := gsidmp[GSID]
-				if ok {
-					errs = append(errs, model.ErrInfo{
-						Line:     index + 4,
-						ErrorMsg: "资产编号:" + GSID + "已存在",
-						FixMsg:   "修改为不重复的编码(比如后面加上一些字母)",
-					})
 				} else {
-					gsidmp[cell] = cell
+					GSID = cell
+					_, ok := gsidmp[GSID]
+					if ok {
+						errs = append(errs, model.ErrInfo{
+							Line:     index + 4,
+							ErrorMsg: "资产编号:" + GSID + "已存在",
+							FixMsg:   "修改为不重复的编码(比如后面加上一些字母)",
+						})
+					} else {
+						gsidmp[cell] = cell
+					}
 				}
+
 			}
 			f, ok := utils.TitleCheckFuncMap[title]
 			if ok {

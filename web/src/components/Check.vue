@@ -6,7 +6,7 @@
         <a-card style="text-align: center">
           <h2 style="color: #0034ff">资产系统导入模板检验工具</h2>
 
-          <a-upload-dragger :progress="progress" name="file"
+          <a-upload-dragger :progress="progress" name="file" :before-upload="beforeUpload"
                             :showUploadList="false"
                             accept=".xls,.xlsx"
                             :multiple="false" :action="uploadApi" @change="handleChange">
@@ -17,7 +17,7 @@
           </a-upload-dragger>
           <h4 style="color: #bc08ef" @click="showNotice">powered by sxz799(点我查看使用说明)</h4>
 
-          <a-divider orientation="center"></a-divider>
+          <a-divider orientation="center">{{ this.fileName}}</a-divider>
           <a-table :locale="tableLocale" :columns="columns" :data-source="tableData"></a-table>
         </a-card>
       </div>
@@ -67,7 +67,13 @@ export default defineComponent({
     const tableLocale = {
       emptyText: '暂无数据'
     };
+    const beforeUpload = file => {
+      console.log(file)
+      this.fileName=file.name
+    };
     return {
+      beforeUpload,
+      fileName: '',
       tableLocale,
       visible: localStorage.getItem("showAgain") != "N",
       uploadApi: "/api/upload",
