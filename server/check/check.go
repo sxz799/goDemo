@@ -105,129 +105,177 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 
 func check(rows [][]string) (num int, errs []model.ErrInfo) {
 
+	//列号和标题的map
 	indexTitleMap := make(map[int]string)
-	firstRow := rows[0]
-	for i, cell := range firstRow {
-		indexTitleMap[i] = cell
+	//所有的标题
+	titles := make([]string, 0)
+
+	//标题行
+	titleRow := rows[0]
+	//遍历标题行 记录列号和标题的关系
+	for i, cell := range titleRow {
+		if len(cell) > 0 {
+			indexTitleMap[i] = cell
+			titles = append(titles, cell)
+		}
 	}
+
+	//todo 判断是否缺失某一列
+
 	rows = rows[1:]
-
-	var gsidmp = make(map[string]string)
-
+	//gsid的map 用于判断是否存在相同的gsid
+	var GsIdMp = make(map[string]string)
 	for index, row := range rows {
 		if strings.Contains(row[0], "合计") {
 			break
 		}
-		GSID := ""
-		titleValueMap := make(map[string]string)
-		// 遍历该行中的所有单元格
-		for k, cell := range row {
-			title := indexTitleMap[k]
-			titleValueMap[title] = cell
-			//校验资产编码唯一性
-			if title == "资产编号" {
-				if len(strings.ReplaceAll(cell, " ", "")) < 1 {
+
+		lastErrorMktName := ""
+		go func(row []string) {
+			titleValueMap := make(map[string]string)
+			for k, cell := range row {
+				title := indexTitleMap[k]
+				titleValueMap[title] = cell
+				f, ok := utils.TitleCheckFuncMap[title]
+				if ok {
+					correct, errInfo := f(cell)
+					if !correct {
+						errInfo.Line = index + 4
+						errInfo.ErrorMsg = title + errInfo.ErrorMsg
+						errs = append(errs, errInfo)
+					}
+				}
+			}
+			GsId := titleValueMap["资产编号"]
+			if len(strings.ReplaceAll(GsId, " ", "")) < 1 {
+				errs = append(errs, model.ErrInfo{
+					Line:     index + 4,
+					ErrorMsg: "资产编号错误",
+					FixMsg:   "资产编号不可为空",
+				})
+			} else {
+				_, ok := GsIdMp[GsId]
+				if ok {
 					errs = append(errs, model.ErrInfo{
 						Line:     index + 4,
-						ErrorMsg: "资产编号错误",
-						FixMsg:   "资产编号不可为空",
+						ErrorMsg: "资产编号:" + GsId + "已存在",
+						FixMsg:   "修改为不重复的编码(比如后面加上一些字母)",
 					})
 				} else {
-					GSID = cell
-					_, ok := gsidmp[GSID]
-					if ok {
-						errs = append(errs, model.ErrInfo{
-							Line:     index + 4,
-							ErrorMsg: "资产编号:" + GSID + "已存在",
-							FixMsg:   "修改为不重复的编码(比如后面加上一些字母)",
-						})
-					} else {
-						gsidmp[cell] = cell
-					}
+					GsIdMp[GsId] = GsId
 				}
-
 			}
-			f, ok := utils.TitleCheckFuncMap[title]
+
+			tNum := titleValueMap["资产数量"]
+			if strings.Contains(tNum, ".00") {
+				tNum = strings.ReplaceAll(tNum, ".00", "")
+			}
+			tNum2 := titleValueMap["实际数量"]
+			if strings.Contains(tNum2, ".00") {
+				tNum2 = strings.ReplaceAll(tNum2, ".00", "")
+			}
+			capNum, _ := strconv.Atoi(tNum)
+			capRealNum, _ := strconv.Atoi(tNum2)
+
+			if capNum < 1 {
+				errs = append(errs, model.ErrInfo{
+					Line:     index + 4,
+					ErrorMsg: "资产数量异常",
+					FixMsg:   "资产数量不可小于1",
+				})
+			}
+			if capRealNum < 1 {
+				errs = append(errs, model.ErrInfo{
+					Line:     index + 4,
+					ErrorMsg: "实际数量异常",
+					FixMsg:   "实际数量不可小于1",
+				})
+			}
+
+			if capNum > 0 && capRealNum > 0 {
+				errs = append(errs, model.ErrInfo{
+					Line:     index + 4,
+					ErrorMsg: "资产数量和实际数量关系异常",
+					FixMsg:   "资产数量和实际数量不可同时大于1",
+				})
+			}
+
+			mkt, ok := titleValueMap["单位名称"]
 			if ok {
-				correct, errInfo := f(cell)
-				if !correct {
+				correct, errInfo := IsCorrectMKT(mkt)
+				if !correct && mkt != lastErrorMktName {
+					lastErrorMktName = mkt
 					errInfo.Line = index + 4
-					errInfo.ErrorMsg = title + errInfo.ErrorMsg
+					errInfo.ErrorMsg = "单位名称" + errInfo.ErrorMsg
+					errInfo.FixMsg = errInfo.FixMsg + "(单位名称错误只记录一条,但所有的记录都要修改)"
 					errs = append(errs, errInfo)
-				}
-			}
-
-		}
-		tNum := titleValueMap["资产数量"]
-		if strings.Contains(tNum, ".00") {
-			tNum = strings.ReplaceAll(tNum, ".00", "")
-		}
-		capNum, _ := strconv.Atoi(tNum)
-
-		mkt, ok := titleValueMap["单位名称"]
-		if ok {
-			correct, errInfo := utils.IsCorrectMKT(mkt)
-			if !correct {
-				errInfo.Line = index + 4
-				errInfo.ErrorMsg = "单位名称" + errInfo.ErrorMsg
-				errs = append(errs, errInfo)
-			} else {
-				correct, errInfo = utils.IsCorrectDept(titleValueMap["部门名称"], mkt)
-				if !correct {
-					errInfo.Line = index + 4
-					errInfo.ErrorMsg = "部门名称" + errInfo.ErrorMsg
-					errs = append(errs, errInfo)
-				}
-				correct, errInfo = utils.IsCorrectDept(titleValueMap["使用部门"], mkt)
-				if !correct {
-					errInfo.Line = index + 4
-					errInfo.ErrorMsg = "使用部门" + errInfo.ErrorMsg
-					errs = append(errs, errInfo)
-				}
-
-				users, ok := titleValueMap["责任人"]
-				if ok {
-					if strings.Contains(users, "+") {
-						if capNum > 0 && capNum != len(strings.Split(users, "+")) {
-							errs = append(errs, model.ErrInfo{
-								Line:     index + 4,
-								ErrorMsg: "责任人数量配置异常！",
-								FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
-							})
-						}
-						for _, user := range strings.Split(users, "+") {
-							correct, errInfo = utils.IsCorrectUser(user, mkt)
-							if !correct {
-								errInfo.Line = index + 4
-								errInfo.ErrorMsg = "责任人" + errInfo.ErrorMsg
-								errs = append(errs, errInfo)
-							}
-						}
-					} else {
-						correct, errInfo = utils.IsCorrectUser(users, mkt)
-						if !correct {
-							if !correct {
-								errInfo.Line = index + 4
-								errInfo.ErrorMsg = "责任人" + errInfo.ErrorMsg
-								errs = append(errs, errInfo)
-							}
-						}
+				} else {
+					correct, errInfo = IsCorrectDept(titleValueMap["部门名称"], mkt)
+					if !correct {
+						errInfo.Line = index + 4
+						errInfo.ErrorMsg = "部门名称" + errInfo.ErrorMsg
+						errs = append(errs, errInfo)
+					}
+					correct, errInfo = IsCorrectDept(titleValueMap["使用部门"], mkt)
+					if !correct {
+						errInfo.Line = index + 4
+						errInfo.ErrorMsg = "使用部门" + errInfo.ErrorMsg
+						errs = append(errs, errInfo)
 					}
 
-				}
-
-				users2, ok := titleValueMap["使用人"]
-				if ok {
-					if strings.Contains(users2, "+") {
-						if capNum > 0 && capNum != len(strings.Split(users2, "+")) {
-							errs = append(errs, model.ErrInfo{
-								Line:     index + 4,
-								ErrorMsg: "使用人数量配置异常！",
-								FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
-							})
+					users, ok := titleValueMap["责任人"]
+					if ok {
+						if strings.Contains(users, "+") {
+							if capNum > 0 && capNum != len(strings.Split(users, "+")) {
+								errs = append(errs, model.ErrInfo{
+									Line:     index + 4,
+									ErrorMsg: "责任人数量配置异常！",
+									FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
+								})
+							}
+							for _, user := range strings.Split(users, "+") {
+								correct, errInfo = IsCorrectUser(user, mkt)
+								if !correct {
+									errInfo.Line = index + 4
+									errInfo.ErrorMsg = "责任人" + errInfo.ErrorMsg
+									errs = append(errs, errInfo)
+								}
+							}
+						} else {
+							correct, errInfo = IsCorrectUser(users, mkt)
+							if !correct {
+								if !correct {
+									errInfo.Line = index + 4
+									errInfo.ErrorMsg = "责任人" + errInfo.ErrorMsg
+									errs = append(errs, errInfo)
+								}
+							}
 						}
-						for _, user := range strings.Split(users2, "+") {
-							correct, errInfo = utils.IsCorrectUser(user, mkt)
+
+					}
+
+					users2, ok := titleValueMap["使用人"]
+					if ok {
+						if strings.Contains(users2, "+") {
+							if capNum > 0 && capNum != len(strings.Split(users2, "+")) {
+								errs = append(errs, model.ErrInfo{
+									Line:     index + 4,
+									ErrorMsg: "使用人数量配置异常！",
+									FixMsg:   "修改资产数量与使用人的数量(资产数量大于1时,人员要么1个，要么与资产数量相同)",
+								})
+							}
+							for _, user := range strings.Split(users2, "+") {
+								correct, errInfo = IsCorrectUser(user, mkt)
+								if !correct {
+									if !correct {
+										errInfo.Line = index + 4
+										errInfo.ErrorMsg = "使用人" + errInfo.ErrorMsg
+										errs = append(errs, errInfo)
+									}
+								}
+							}
+						} else {
+							correct, errInfo = IsCorrectUser(users2, mkt)
 							if !correct {
 								if !correct {
 									errInfo.Line = index + 4
@@ -236,51 +284,42 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 								}
 							}
 						}
-					} else {
-						correct, errInfo = utils.IsCorrectUser(users2, mkt)
-						if !correct {
-							if !correct {
-								errInfo.Line = index + 4
-								errInfo.ErrorMsg = "使用人" + errInfo.ErrorMsg
-								errs = append(errs, errInfo)
-							}
-						}
-					}
 
+					}
+				}
+
+			}
+
+			if titleValueMap["是否计提折旧"] == "是" {
+				syyf, _ := strconv.Atoi(titleValueMap["使用月份"])
+				ytyf, _ := strconv.Atoi(titleValueMap["已提月份"])
+				wtyf, _ := strconv.Atoi(titleValueMap["未计提月份"])
+
+				if wtyf < 1 {
+					errs = append(errs, model.ErrInfo{
+						Line:     index + 4,
+						ErrorMsg: "未计提月份异常",
+						FixMsg:   "计提折旧时未计提月份不可小于1",
+					})
+				}
+				if syyf != ytyf+wtyf {
+					errs = append(errs, model.ErrInfo{
+						Line:     index + 4,
+						ErrorMsg: "使用月份不等于已提月份加未提月份",
+						FixMsg:   "校对使用月份，已提月份，未提月份",
+					})
+				}
+				float, _ := strconv.ParseFloat(titleValueMap["净残值率(%)"], 64)
+				float = float / 100
+				if float == 1 {
+					errs = append(errs, model.ErrInfo{
+						Line:     index + 4,
+						ErrorMsg: "净残值率错误",
+						FixMsg:   "净残值率在计提时不可等于100%",
+					})
 				}
 			}
-
-		} else {
-			errs = append(errs, model.ErrInfo{
-				Line:     index + 4,
-				ErrorMsg: "单位名称不可为空",
-				FixMsg:   "填入提供的组织架构中的门店名称",
-			})
-		}
-
-		if titleValueMap["是否计提折旧"] == "是" {
-			syyf, _ := strconv.Atoi(titleValueMap["使用月份"])
-			ytyf, _ := strconv.Atoi(titleValueMap["已提月份"])
-			wtyf, _ := strconv.Atoi(titleValueMap["未计提月份"])
-			if syyf != ytyf+wtyf {
-				errs = append(errs, model.ErrInfo{
-					Line:     index + 4,
-					ErrorMsg: "使用月份不等于已提月份加未提月份",
-					FixMsg:   "校对使用月份，已提月份，未提月份",
-				})
-
-			}
-			float, _ := strconv.ParseFloat(titleValueMap["净残值率(%)"], 64)
-			float = float / 100
-			if float == 1 {
-
-				errs = append(errs, model.ErrInfo{
-					Line:     index + 4,
-					ErrorMsg: "净残值率错误",
-					FixMsg:   "净残值率在计提折旧时不可等于100%",
-				})
-			}
-		}
+		}(row)
 
 	}
 	num = len(rows)

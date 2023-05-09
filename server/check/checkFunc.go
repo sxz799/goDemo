@@ -1,7 +1,8 @@
-package utils
+package check
 
 import (
 	"gsCheck/model"
+	"gsCheck/utils"
 	"strconv"
 	"strings"
 )
@@ -81,16 +82,6 @@ func IsCorrectRate(str string) (bool, model.ErrInfo) {
 	// 		}
 	// 	}
 	// }
-	return true, model.ErrInfo{}
-}
-
-func IsCorrectGSID(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	return true, model.ErrInfo{}
 }
 
@@ -275,7 +266,7 @@ func IsCorrectMKT(str string) (bool, model.ErrInfo) {
 			FixMsg:   "单位名称不可为空",
 		}
 	}
-	rows, err := DB.Raw("select 1 from depts where mkt=? limit 1", str).Rows()
+	rows, err := utils.DB.Raw("select 1 from depts where mkt=? limit 1", str).Rows()
 	if err != nil {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + str,
@@ -300,7 +291,7 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 			FixMsg:   "不可为空",
 		}
 	}
-	rows, err := DB.Raw("select 1 from depts where name=? and mkt=? limit 1", dept, mkt).Rows()
+	rows, err := utils.DB.Raw("select 1 from depts where name=? and mkt=? limit 1", dept, mkt).Rows()
 	if err != nil {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + dept,
@@ -324,7 +315,7 @@ func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
 			FixMsg:   "不可为空",
 		}
 	}
-	rows, err := DB.Raw("select 1 from users where name=? and mkt=? limit 1", name, mkt).Rows()
+	rows, err := utils.DB.Raw("select 1 from users where name=? and mkt=? limit 1", name, mkt).Rows()
 	if err != nil {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + name,
