@@ -1,0 +1,49 @@
+name: CI
+
+jobs:
+
+  server:
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+
+    - name: Build Server
+      run:  go build -v -o bin/gscheck .
+      working-directory: ./server
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+       name: gscheck-artifact
+       path: ${{ github.workspace }}/server/bin
+
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        
+    - name: Build Web
+      run: npm install && npm run build
+      working-directory: ./web
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+       name: gscheck-artifact
+       path: ${{ github.workspace }}/web/dist
+
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.1.1
+      with:
+       name: gscheck-artifact
+    
