@@ -37,6 +37,7 @@ jobs:
 
     - name: Move  Files
       run: |
+        mkdir gsCheck
         mv server/bin/gscheck gsCheck/
         mv web/dist gsCheck/dist/
 
