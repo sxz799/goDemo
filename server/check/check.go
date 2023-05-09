@@ -158,6 +158,9 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 
 		}
 		tNum := titleValueMap["资产数量"]
+		if strings.Contains(tNum, ".00") {
+			tNum = strings.ReplaceAll(tNum, ".00", "")
+		}
 		capNum, _ := strconv.Atoi(tNum)
 
 		mkt, ok := titleValueMap["单位名称"]
@@ -184,7 +187,7 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 				users, ok := titleValueMap["责任人"]
 				if ok {
 					if strings.Contains(users, "+") {
-						if capNum != len(strings.Split(users, "+")) {
+						if capNum > 0 && capNum != len(strings.Split(users, "+")) {
 							errs = append(errs, model.ErrInfo{
 								Line:     index + 4,
 								ErrorMsg: "责任人数量配置异常！",
@@ -215,7 +218,7 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 				users2, ok := titleValueMap["使用人"]
 				if ok {
 					if strings.Contains(users2, "+") {
-						if capNum != len(strings.Split(users2, "+")) {
+						if capNum > 0 && capNum != len(strings.Split(users2, "+")) {
 							errs = append(errs, model.ErrInfo{
 								Line:     index + 4,
 								ErrorMsg: "使用人数量配置异常！",
