@@ -6,8 +6,6 @@ name: Go
 on:
   push:
     branches: [main]
-    paths: 
-    - '*build' # Push events to matching *-build
 
 jobs:
 
