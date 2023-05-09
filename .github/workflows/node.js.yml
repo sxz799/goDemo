@@ -26,7 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: ls
     - run: cd web/
+    - run: ls
     - run: npm ci
     - run: npm run build --if-present
     - run: ls
@@ -34,4 +36,4 @@ jobs:
       uses: actions/download-artifact@v2.1.1
       with:
        name:  gscheck-web-githubAction-artifact
-       path: ${{ github.workspace }}/dist
+       path: ${{ github.workspace }}/web/dist
