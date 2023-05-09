@@ -22,15 +22,15 @@ jobs:
     - name: Build
       run:  go build -v -o bin/gscheck .
       working-directory: ./server
-      
+
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
        name: gscheck-artifact
-       path: ${{ github.workspace }}/bin
+       path: ${{ github.workspace }}/server/bin
 
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.1.1
       with:
        name: gscheck-artifact
-       path: ${{ github.workspace }}/bin
+       path: ${{ github.workspace }}/server/bin
