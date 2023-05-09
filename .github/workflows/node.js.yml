@@ -34,5 +34,5 @@ jobs:
       uses: actions/download-artifact@v2.1.1
       with:
        name: my-artifact
-       path: ${{ github.workspace }}/web/dist
+       path: ${{ github.workspace }}
     
