@@ -33,5 +33,5 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.1.1
       with:
-       name:  gscheck-web-githubAction-artifact
-       path: ${{ github.workspace }}/dist
+       name: gscheck-web-githubAction-artifact
+       path: ${{ github.workspace }}/web/dist
