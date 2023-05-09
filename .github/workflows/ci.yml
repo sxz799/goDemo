@@ -47,8 +47,8 @@ jobs:
        name: gscheck-artifact
        path: ${{ github.workspace }}/gsCheck
 
-#     - name: Download a Build Artifact
-#       uses: actions/download-artifact@v2.1.1
-#       with:
-#        name: gscheck-artifact
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.1.1
+      with:
+       name: gscheck-artifact
     
