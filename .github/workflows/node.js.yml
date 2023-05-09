@@ -5,8 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    tags:
-    - '*-build' # Push events to matching *-build
+    branches: [main]
+    paths: 
+    - '*build' # Push events to matching *-build
 
 jobs:
   build:

@@ -5,8 +5,9 @@ name: Go
 
 on:
   push:
-    tags:
-    - '*-build' # Push events to matching *-build
+    branches: [main]
+    paths: 
+    - '*build' # Push events to matching *-build
 
 jobs:
 
@@ -22,9 +23,15 @@ jobs:
 
     - name: Build
       run:  cd server/ && go build -v -o bin/gscheck .
- 
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+       name: gscheck-artifact
+       path: ${{ github.workspace }}/bin
+
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.1.1
       with:
-       name:  gscheck-githubAction-artifact
+       name: gscheck-artifact
        path: ${{ github.workspace }}/bin
