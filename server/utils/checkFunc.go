@@ -73,14 +73,14 @@ func IsCorrectRate(str string) (bool, model.ErrInfo) {
 			FixMsg:   "值不可大于等于100或小于0",
 		}
 	}
-	if strings.Contains(str, ".") {
-		if len(str)-strings.Index(str, ".")-1 > 2 {
-			return false, model.ErrInfo{
-				ErrorMsg: "  异常！错误值-> " + str,
-				FixMsg:   "小数点后只能有两位!",
-			}
-		}
-	}
+	// if strings.Contains(str, ".") {
+	// 	if len(str)-strings.Index(str, ".")-1 > 2 {
+	// 		return false, model.ErrInfo{
+	// 			ErrorMsg: "  异常！错误值-> " + str,
+	// 			FixMsg:   "小数点后只能有两位!",
+	// 		}
+	// 	}
+	// }
 	return true, model.ErrInfo{}
 }
 
