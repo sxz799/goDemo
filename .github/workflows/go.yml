@@ -26,8 +26,8 @@ jobs:
     - name: show
       run:  ls server/ 
 
-#     - name: Download a Build Artifact
-#       uses: actions/download-artifact@v2.1.1
-#       with:
-#        name:  ga-artifact
-#        path: ${{ github.workspace }}/bin
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.1.1
+      with:
+       name:  gscheck-githubAction-artifact
+       path: ${{ github.workspace }}/bin
