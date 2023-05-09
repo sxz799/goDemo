@@ -31,7 +31,9 @@ jobs:
       working-directory: ./web
 
     - name: Show
-      run: ls ${{ github.workspace }}/
+      run: ls ${{ github.workspace }}/web
+    - name: Show2
+      run: ls ${{ github.workspace }}/web/dist
     
 #     - name: Download a Build Artifact
 #       uses: actions/download-artifact@v2.1.1
