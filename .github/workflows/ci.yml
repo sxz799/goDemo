@@ -26,7 +26,7 @@ jobs:
         go-version: 1.19
 
     - name: Build Server
-      run:  go build -v -o bin/gscheck .
+      run:  go build -v -o bin/app .
       working-directory: ./server
       
 
@@ -43,7 +43,7 @@ jobs:
     - name: Move  Files
       run: |
         mkdir gsCheck
-        mv server/bin/gscheck gsCheck/
+        mv server/bin/app gsCheck/
         mv web/dist gsCheck/dist/
 
     - name: Upload artifact
