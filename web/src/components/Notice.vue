@@ -28,8 +28,6 @@
 import delsheet from '@/images/delsheet.png'
 import sethanggao from '@/images/sethanggao.png'
 import setliekuan from '@/images/setliekuan.png'
-import setcell1 from '@/images/setcell1.png'
-import setcell2 from '@/images/setcell2.png'
 import settop2row from '@/images/settop2row.png'
 
 
@@ -40,8 +38,6 @@ export default {
       delsheet: delsheet,
       sethanggao: sethanggao,
       setliekuan: setliekuan,
-      setcell1: setcell1,
-      setcell2: setcell2,
       settop2row: settop2row,
     }
 
