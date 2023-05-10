@@ -292,7 +292,7 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 	if d.Code == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + dept,
-			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
+			FixMsg:   "没有找到该部门!(请填入提供的组织架构中的部门名称)",
 		}
 	}
 	return true, model.ErrInfo{}
@@ -310,7 +310,7 @@ func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
 	if u.Name == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + name,
-			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
+			FixMsg:   "没有找到该用户!(请填入提供的组织架构中的用户姓名)",
 		}
 	}
 	return true, model.ErrInfo{}
