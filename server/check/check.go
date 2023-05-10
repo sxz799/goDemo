@@ -13,6 +13,14 @@ import (
 )
 
 func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
+	defer func() {
+		if err := recover(); err != nil {
+			errs = append(errs, model.ErrInfo{
+				ErrorMsg: "读取文件发生异常!",
+				FixMsg:   err.(error).Error(),
+			})
+		}
+	}()
 	rows := make([][]string, 0)
 	switch fileType {
 	case "xlsx":
@@ -43,6 +51,10 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 			return
 		}
 	case "xls":
+		errs = append(errs, model.ErrInfo{
+			ErrorMsg: "文件类型兼容性差",
+			FixMsg:   "检测到正在使用xls类型文件,强烈推荐导出xlsx类型的文件进行检测!",
+		})
 		var buf bytes.Buffer
 		_, err := io.Copy(&buf, r) // 将 io.Reader 对象读取到缓冲区中
 		if err != nil {
