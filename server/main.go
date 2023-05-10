@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gsCheck/check"
 	"gsCheck/model"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -38,7 +39,7 @@ func main() {
 		num, errs := check.PreCheck(fileType, open)
 		after := time.Now()
 		duration := after.Sub(before)
-
+		log.Println("上传了文件:", filename)
 		extMsg := " [本次共校验" + strconv.Itoa(num) + "行数据,共计耗时" + strconv.FormatInt(duration.Milliseconds(), 10) + "ms]"
 		if len(errs) == 0 {
 			c.JSON(200, model.Response{
