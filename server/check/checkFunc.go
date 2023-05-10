@@ -266,21 +266,17 @@ func IsCorrectMKT(str string) (bool, model.ErrInfo) {
 			FixMsg:   "单位名称不可为空",
 		}
 	}
-	rows, err := utils.DB.Raw("select 1 from depts where mkt=? limit 1", str).Rows()
-	if err != nil {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值-> " + str,
-			FixMsg:   "门店查询失败(SQL查询失败)!",
-		}
-	}
-	if rows.Next() {
-		return true, model.ErrInfo{}
-	} else {
+
+	var dept model.Dept
+	utils.DB.Where("mkt=?", str).First(&dept)
+	if dept.Code == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + str,
 			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
 		}
 	}
+
+	return true, model.ErrInfo{}
 
 }
 
@@ -291,21 +287,15 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 			FixMsg:   "不可为空",
 		}
 	}
-	rows, err := utils.DB.Raw("select 1 from depts where name=? and mkt=? limit 1", dept, mkt).Rows()
-	if err != nil {
+	var d model.Dept
+	utils.DB.Where("mkt=? and name=?", mkt, dept).First(&d)
+	if d.Code == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + dept,
-			FixMsg:   "部门查询失败(SQL查询失败)!",
+			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
 		}
 	}
-	if rows.Next() {
-		return true, model.ErrInfo{}
-	} else {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值-> " + dept,
-			FixMsg:   "没有找到此部门!(请填入提供的组织架构中的部门名称)",
-		}
-	}
+	return true, model.ErrInfo{}
 }
 
 func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
@@ -315,19 +305,13 @@ func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
 			FixMsg:   "不可为空",
 		}
 	}
-	rows, err := utils.DB.Raw("select 1 from users where name=? and mkt=? limit 1", name, mkt).Rows()
-	if err != nil {
+	var u model.User
+	utils.DB.Where("mkt=? and name=?", mkt, name).First(&u)
+	if u.Name == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + name,
-			FixMsg:   "用户查询失败(SQL查询失败)!",
+			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
 		}
 	}
-	if rows.Next() {
-		return true, model.ErrInfo{}
-	} else {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值-> " + name,
-			FixMsg:   "没有找到此用户!",
-		}
-	}
+	return true, model.ErrInfo{}
 }
