@@ -16,7 +16,12 @@
             <p style="color: #ea073a" class="ant-upload-text">点击这里 或 将文件拖拽到这里 进行检测</p>
           </a-upload-dragger>
           <h4 style="color: #bc08ef" @click="showNotice">powered by sxz799(点我查看使用说明)</h4>
-
+          <a-card style="text-align: center">
+            <h3 style="color: #1585d7" @click="showNotice">常见错误解释说明</h3>
+            <p style="color: #020303">1. 人员、部门在组织架构中存在,但是检测后提示不存在,有可能是因为excel表格中带上了空格</p>
+            <p style="color: #020303">2. ...</p>
+            <p style="color: #020303">3. ...</p>
+          </a-card>
           <a-divider orientation="center">{{ this.fileName}}</a-divider>
           <a-table :locale="tableLocale" :columns="columns" :data-source="tableData"></a-table>
         </a-card>

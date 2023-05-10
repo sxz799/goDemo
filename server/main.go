@@ -56,7 +56,7 @@ func main() {
 					Msg:      "很遗憾,文件还有" + strconv.Itoa(len(errs)) + "个错误要修改-_-!" + extMsg,
 					ErrInfos: errs,
 				})
-			case len(errs) < 20 && len(errs) > 10:
+			case len(errs) < 20 && len(errs) >= 10:
 				c.JSON(200, model.Response{
 					Success:  false,
 					Msg:      "努努力,就还剩" + strconv.Itoa(len(errs)) + "个错误了!" + extMsg,
