@@ -39,7 +39,7 @@ func IsDoubleNum(str string) (bool, model.ErrInfo) {
 	if err != nil {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值-> " + str,
-			FixMsg:   "请填写金额类型",
+			FixMsg:   "请填写金额类型(如果有千分位逗号分隔,请去掉',' [tips:选中该列])",
 		}
 	}
 	if strings.Contains(str, ".") {

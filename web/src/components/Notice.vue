@@ -13,13 +13,7 @@
       <a-image :width="200" :src="sethanggao"/>
     </a-collapse-panel>
 
-    <a-collapse-panel key="4" header="第四步 设置单元格格式(★必做★)" >
-      <a-image-preview-group>
-        <a-image :width="200" :src="setcell1"/>
-        <a-image :width="200" :src="setcell2"/>
-      </a-image-preview-group>
-    </a-collapse-panel>
-    <a-collapse-panel key="5" header="第五步 合并前两行(★必做★)" >
+    <a-collapse-panel key="5" header="第四步 合并前两行(★必做★)" >
       <a-image :width="200" :src="settop2row"/>
     </a-collapse-panel>
     <a-collapse-panel key="7" header="第六步 将文件拖进窗口进行检测" >
