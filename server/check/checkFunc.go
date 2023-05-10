@@ -7,13 +7,23 @@ import (
 	"strings"
 )
 
-func IsIntNum(str string) (bool, model.ErrInfo) {
+func checkNull(str string) (bool, model.ErrInfo) {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
+		return true, model.ErrInfo{
 			ErrorMsg: "  异常！",
 			FixMsg:   "不可为空",
 		}
+	} else {
+		return false, model.ErrInfo{}
 	}
+}
+
+func IsIntNum(str string) (bool, model.ErrInfo) {
+
+	if isNull, errInfo := checkNull(str); isNull {
+		return false, errInfo
+	}
+
 	if strings.Contains(str, ".00") {
 		str = strings.ReplaceAll(str, ".00", "")
 	}
@@ -29,11 +39,8 @@ func IsIntNum(str string) (bool, model.ErrInfo) {
 
 func IsDoubleNum(str string) (bool, model.ErrInfo) {
 
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
+	if isNull, errInfo := checkNull(str); isNull {
+		return false, errInfo
 	}
 	_, err := strconv.ParseFloat(str, 64)
 	if err != nil {
@@ -55,11 +62,8 @@ func IsDoubleNum(str string) (bool, model.ErrInfo) {
 
 func IsCorrectRate(str string) (bool, model.ErrInfo) {
 
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
+	if isNull, errInfo := checkNull(str); isNull {
+		return false, errInfo
 	}
 	rate, err := strconv.ParseFloat(str, 64)
 	if err != nil {
@@ -86,22 +90,13 @@ func IsCorrectRate(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectName(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
+	if isNull, errInfo := checkNull(str); isNull {
+		return false, errInfo
 	}
 	return true, model.ErrInfo{}
 }
 
 func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售"}
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
@@ -115,12 +110,6 @@ func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectManageType(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	var arrs = []string{"财务管理中心-税控类设备",
 		"物业安全中心-保洁设备",
 		"物业安全中心-安保设备",
@@ -145,12 +134,6 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectCWType(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	var arrs = []string{"运输工具",
 		"营业设备",
 		"办公设备",
@@ -177,12 +160,6 @@ func IsCorrectCWType(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectStatus(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	var arrs = []string{"在用",
 		"在库",
 		"闲置",
@@ -202,12 +179,6 @@ func IsCorrectStatus(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectJiTi(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	if str == "是" || str == "否" {
 		return true, model.ErrInfo{}
 	} else {
@@ -236,12 +207,6 @@ func IsCorrectBuyDate(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectZJSF(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
-	}
 	var arrs = []string{"平均年限法",
 		"工作量法",
 		"双倍余额递",
@@ -260,11 +225,8 @@ func IsCorrectZJSF(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectMKT(str string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(str, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值-> " + str,
-			FixMsg:   "单位名称不可为空",
-		}
+	if isNull, errInfo := checkNull(str); isNull {
+		return false, errInfo
 	}
 
 	var dept model.Dept
@@ -275,17 +237,13 @@ func IsCorrectMKT(str string) (bool, model.ErrInfo) {
 			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
 		}
 	}
-
 	return true, model.ErrInfo{}
 
 }
 
 func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(dept, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
+	if isNull, errInfo := checkNull(dept); isNull {
+		return false, errInfo
 	}
 	var d model.Dept
 	utils.DB.Where("mkt=? and name=?", mkt, dept).First(&d)
@@ -299,11 +257,8 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
-	if len(strings.ReplaceAll(name, " ", "")) < 1 {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！",
-			FixMsg:   "不可为空",
-		}
+	if isNull, errInfo := checkNull(name); isNull {
+		return false, errInfo
 	}
 	var u model.User
 	utils.DB.Where("mkt=? and name=?", mkt, name).First(&u)

@@ -6,7 +6,7 @@
         <a-card style="text-align: center">
           <h2 style="color: #0034ff">资产系统导入模板检验工具</h2>
 
-          <a-upload-dragger :progress="progress" name="file" :before-upload="beforeUpload"
+          <a-upload-dragger name="file" :before-upload="beforeUpload"
                             :showUploadList="false"
                             accept=".xls,.xlsx"
                             :multiple="false" :action="uploadApi" @change="handleChange">
@@ -16,12 +16,9 @@
             <p style="color: #ea073a" class="ant-upload-text">点击这里 或 将文件拖拽到这里 进行检测</p>
           </a-upload-dragger>
           <h4 style="color: #bc08ef" @click="showNotice">powered by sxz799(点我查看使用说明)</h4>
-          <a-card style="text-align: center">
-            <h3 style="color: #1585d7" @click="showNotice">常见错误解释说明</h3>
-            <p style="color: #020303">1. 人员、部门在组织架构中存在,但是检测后提示不存在,有可能是因为excel表格中带上了空格</p>
-            <p style="color: #020303">2. ...</p>
-            <p style="color: #020303">3. ...</p>
-          </a-card>
+
+          <a-tag color="red">1. 人员、部门在组织架构中存在,但是检测后提示不存在,有可能是因为excel表格内容里带上了空格</a-tag>
+
           <a-divider orientation="center">{{ this.fileName}}</a-divider>
           <a-table :locale="tableLocale" :columns="columns" :data-source="tableData"></a-table>
         </a-card>
@@ -60,15 +57,6 @@ export default defineComponent({
 
   data() {
 
-    const progress = {
-      strokeColor: {
-        '0%': '#108ee9',
-        '100%': '#87d068',
-      },
-      strokeWidth: 3,
-      format: percent => `${parseFloat(percent.toFixed(2))}%`,
-      class: 'test',
-    };
     const tableLocale = {
       emptyText: '暂无数据'
     };
@@ -82,7 +70,6 @@ export default defineComponent({
       tableLocale,
       visible: localStorage.getItem("showAgain") != "N",
       uploadApi: "/api/upload",
-      progress,
       handleChange: e => {
         if (e.file.status === 'done') {
           if (e.file.response.success) {
