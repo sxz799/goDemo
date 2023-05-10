@@ -101,9 +101,15 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 	}
 
 	rows = rows[2:]
-	cellA3 := rows[0][0]
-	cellA3 = strings.ReplaceAll(cellA3, " ", "")
-	if cellA3 == "" || !strings.Contains("资产编号,资产名称,资产来源,管理类别,类别名称1,资产状态,是否计提折旧,入账日期,资产原值,累计折旧,折旧方法,资产数量,净残值率(%),净残值,月折旧率(%),月折旧额,年折旧率(%),年折旧额,存放地点,部门名称,责任人,入账时累计折旧,减值准备,已提月份,未计提月份,单位名称,使用部门,使用人,使用月份,计量单位,备注,实际数量", cellA3) {
+	titleRow := rows[0]
+	titleRight := false
+	for _, cell := range titleRow {
+		if strings.Contains("资产编号,资产名称,资产来源,管理类别,类别名称1,资产状态,是否计提折旧,入账日期,资产原值,累计折旧,折旧方法,资产数量,净残值率(%),净残值,月折旧率(%),月折旧额,年折旧率(%),年折旧额,存放地点,部门名称,责任人,入账时累计折旧,减值准备,已提月份,未计提月份,单位名称,使用部门,使用人,使用月份,计量单位,备注,实际数量", cell) {
+			titleRight = true
+			break
+		}
+	}
+	if !titleRight {
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: "表格结构错误",
 			FixMsg:   "请将前两行内容清空并合并为1个单元格!(资产编号,资产名称,资产来源等标题要在第三行!)",
