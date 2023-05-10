@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  server:
+  build:
     strategy:
       matrix:
         node-version: [16.x]
