@@ -100,11 +100,21 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		}
 	}
 
-	capType := "01" // 默认固定资产
+	if rows[0][0] != "" || rows[1][0] != "" {
+		errs = append(errs, model.ErrInfo{
+			Line:     1,
+			ErrorMsg: "表格结构错误",
+			FixMsg:   "请将前两行内容清空!",
+		})
+	}
+
+	//去掉了前两行
 	rows = rows[2:]
 	titleRow := rows[0]
 
+	capType := "01" // 默认固定资产
 	if len(titleRow) < 30 {
+
 		capType = "02" //标题数量小于30 说明是地址易耗品
 	}
 
@@ -118,7 +128,7 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 	if !titleRight {
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: "表格结构错误",
-			FixMsg:   "请将前两行内容清空并合并为1个单元格!(资产编号,资产名称,资产来源等标题要在第三行!)",
+			FixMsg:   "资产编号,资产名称,资产来源等标题要在第三行!",
 		})
 		return
 	}
@@ -221,6 +231,9 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 					FixMsg:   "资产数量不可小于1",
 				})
 			}
+
+			//todo 对数量超过1000的资产进行提醒
+
 			if capRealNum < 1 {
 				errs = append(errs, model.ErrInfo{
 					Line:     index + 4,
