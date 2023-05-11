@@ -59,6 +59,27 @@ func IsDoubleNum(str string) (bool, model.ErrInfo) {
 	}
 	return true, model.ErrInfo{}
 }
+func IsCorrectPlace(str string) (bool, model.ErrInfo) {
+
+	if len(str) > 100 {
+		return false, model.ErrInfo{
+			ErrorMsg: "  长度异常！",
+			FixMsg:   "不可超过50个汉字",
+		}
+	}
+	return true, model.ErrInfo{}
+}
+
+func IsCorrectMemo(str string) (bool, model.ErrInfo) {
+
+	if len(str) > 200 {
+		return false, model.ErrInfo{
+			ErrorMsg: "  长度异常！",
+			FixMsg:   "不可超过100个汉字",
+		}
+	}
+	return true, model.ErrInfo{}
+}
 
 func IsCorrectRate(str string) (bool, model.ErrInfo) {
 

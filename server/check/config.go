@@ -35,6 +35,7 @@ func init() {
 	//TitleCheckFuncMap["使用人"] = IsCorrectUser
 	TitleCheckFuncMap["使用月份"] = IsIntNum
 	//TitleCheckFuncMap["计量单位"] =
-	//TitleCheckFuncMap["备注"] =
+	TitleCheckFuncMap["存放地点"] = IsCorrectPlace
+	TitleCheckFuncMap["备注"] = IsCorrectMemo
 	TitleCheckFuncMap["实际数量"] = IsIntNum
 }
