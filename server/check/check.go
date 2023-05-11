@@ -100,8 +100,14 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		}
 	}
 
+	capType := "01" // 默认固定资产
 	rows = rows[2:]
 	titleRow := rows[0]
+
+	if len(titleRow) < 30 {
+		capType = "02" //标题数量小于30 说明是地址易耗品
+	}
+
 	titleRight := false
 	for _, cell := range titleRow {
 		if strings.Contains("资产编号,资产名称,资产来源,管理类别,类别名称1,资产状态,是否计提折旧,入账日期,资产原值,累计折旧,折旧方法,资产数量,净残值率(%),净残值,月折旧率(%),月折旧额,年折旧率(%),年折旧额,存放地点,部门名称,责任人,入账时累计折旧,减值准备,已提月份,未计提月份,单位名称,使用部门,使用人,使用月份,计量单位,备注,实际数量", cell) {
@@ -117,13 +123,13 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		return
 	}
 
-	n, errs2 := check(rows)
+	n, errs2 := check(capType, rows)
 	errs = append(errs, errs2...)
 	num = num + n
 	return
 }
 
-func check(rows [][]string) (num int, errs []model.ErrInfo) {
+func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 
 	//列号和标题的map
 	indexTitleMap := make(map[int]string)
@@ -149,6 +155,9 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 	var GsIdMp sync.Map
 	var errorMktMap sync.Map
 	var wg sync.WaitGroup
+
+	capTypeError := false
+
 	for index, row := range rows {
 		if strings.Contains(row[0], "合计") {
 			errs = append(errs, model.ErrInfo{
@@ -348,6 +357,16 @@ func check(rows [][]string) (num int, errs []model.ErrInfo) {
 					})
 				}
 			}
+
+			if capType == "02" && titleValueMap["类别名称"] != "低值易耗品" && !capTypeError {
+				errs = append(errs, model.ErrInfo{
+					Line:     0,
+					ErrorMsg: "类别名称异常",
+					FixMsg:   "检测到当前表格模板是低值易耗品,类别名称直接填低值易耗品即可!",
+				})
+				capTypeError = true
+			}
+
 			wg.Done()
 		}(index, row)
 	}
