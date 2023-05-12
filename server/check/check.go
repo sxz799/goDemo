@@ -98,7 +98,6 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 			})
 			return
 		}
-
 		for i := 0; i < int(maxRow); i++ {
 			row = sheet.Row(i)
 			trow := make([]string, 0)
@@ -109,13 +108,14 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 			rows = append(rows, trow)
 		}
 	}
-
-	if rows[0][0] != "" || rows[1][0] != "" {
-		errs = append(errs, model.ErrInfo{
-			Line:     1,
-			ErrorMsg: "表格结构错误",
-			FixMsg:   "请将前两行内容清空!",
-		})
+	if rows[0] != nil && rows[1] != nil {
+		if rows[0][0] != "" || rows[1][0] != "" {
+			errs = append(errs, model.ErrInfo{
+				Line:     1,
+				ErrorMsg: "表格结构错误",
+				FixMsg:   "请将标题上方的前两行的单元格内容清空并合并未一个单元格(不是前两行全部单元格,只是标题上方的单元格)",
+			})
+		}
 	}
 
 	//去掉了前两行
