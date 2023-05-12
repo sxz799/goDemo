@@ -353,10 +353,10 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 						FixMsg:   "计提折旧时未计提月份不可小于1",
 					})
 				}
-				if syyf != ytyf+wtyf {
+				if syyf != ytyf+wtyf || ytyf > syyf {
 					errs = append(errs, model.ErrInfo{
 						Line:     index + 4,
-						ErrorMsg: "使用月份不等于已提月份加未提月份",
+						ErrorMsg: "使用月份不等于已提月份加未提月份 或 已提月份大于使用月份",
 						FixMsg:   "校对使用月份，已提月份，未提月份",
 					})
 				}
