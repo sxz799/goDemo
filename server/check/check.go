@@ -15,6 +15,7 @@ import (
 func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 	defer func() {
 		if err := recover(); err != nil {
+
 			errs = append(errs, model.ErrInfo{
 				ErrorMsg: "读取文件发生异常!",
 				FixMsg:   err.(error).Error(),
@@ -22,6 +23,7 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		}
 	}()
 	rows := make([][]string, 0)
+
 	switch fileType {
 	case "xlsx":
 		excelFile, err := excelize.OpenReader(r)
@@ -77,16 +79,24 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		maxRow := sheet.MaxRow
 		if maxRow < 4 {
 			errs = append(errs, model.ErrInfo{
-				ErrorMsg: "格式不正确",
-				FixMsg:   "至少在第4行要有数据",
+				ErrorMsg: "表格式不正确",
+				FixMsg:   "资产编号,资产名称,资产来源等标题要在第三行,且第4行要有数据",
 			})
 			return
 		}
 		row := sheet.Row(2)
 
 		lastCol := row.LastCol()
-		for strings.ReplaceAll(row.Col(lastCol), " ", "") == "" {
+
+		for strings.ReplaceAll(row.Col(lastCol), " ", "") == "" && lastCol > 0 {
 			lastCol--
+		}
+		if lastCol < 3 {
+			errs = append(errs, model.ErrInfo{
+				ErrorMsg: "表格式不正确",
+				FixMsg:   "资产编号,资产名称,资产来源等标题要在第三行",
+			})
+			return
 		}
 
 		for i := 0; i < int(maxRow); i++ {
