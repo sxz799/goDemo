@@ -149,7 +149,9 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 		"超市事业部-经营设备",
 		"超市事业部-营运设备",
 		"招商中心-百货经营设备",
-		"运营中心-百货营运设备"}
+		"招商中心-百货经营设备",
+		"软件",
+		"土地"}
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
@@ -164,6 +166,7 @@ func IsCorrectCWType(str string) (bool, model.ErrInfo) {
 	var arrs = []string{"运输工具",
 		"营业设备",
 		"办公设备",
+		"安全生产设备",
 		"低值易耗品",
 		"工会设备",
 		"电子设备",
