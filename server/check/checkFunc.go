@@ -137,7 +137,10 @@ func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectManageType(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"财务管理中心-税控类设备",
+	var arrs = []string{
+		"软件",
+		"土地",
+		"财务管理中心-税控类设备",
 		"物业安全中心-保洁设备",
 		"物业安全中心-安保设备",
 		"物业安全中心-弱电设备",
@@ -149,9 +152,8 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 		"超市事业部-经营设备",
 		"超市事业部-营运设备",
 		"招商中心-百货经营设备",
-		"招商中心-百货经营设备",
-		"软件",
-		"土地"}
+		"运营中心-百货营运设备",
+	}
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
@@ -163,10 +165,10 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectCWType(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"运输工具",
+	var arrs = []string{
+		"运输工具",
 		"营业设备",
 		"办公设备",
-		"安全生产设备",
 		"低值易耗品",
 		"工会设备",
 		"电子设备",
@@ -177,7 +179,9 @@ func IsCorrectCWType(str string) (bool, model.ErrInfo) {
 		"商标",
 		"专利",
 		"网络资产",
-		"其他设备"}
+		"安全生产设备",
+		"其他设备",
+	}
 	if strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
