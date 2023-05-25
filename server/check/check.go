@@ -260,6 +260,14 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				})
 			}
 
+			if capRealNum > 1 && capRealNum < 10 {
+				errs = append(errs, model.ErrInfo{
+					Line:     index + 4,
+					ErrorMsg: "实际数量异常",
+					FixMsg:   "使用大码管理时,实际数量不可小于10",
+				})
+			}
+
 			mkt, ok := titleValueMap["单位名称"]
 			if ok {
 				correct, errInfo := IsCorrectMKT(mkt)
