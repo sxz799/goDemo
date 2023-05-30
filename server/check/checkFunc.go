@@ -202,7 +202,7 @@ func IsCorrectStatus(str string) (bool, model.ErrInfo) {
 		"在途",
 		"已售",
 		"已拆分"}
-	if strings.Contains(strings.Join(arrs, ","), str) {
+	if strings.Contains(strings.Join(arrs, ","), str) && str != "" {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
@@ -248,7 +248,7 @@ func IsCorrectZJSF(str string) (bool, model.ErrInfo) {
 		"新准则",
 		"一次性摊销",
 		"减值或变动后的平均年限法"}
-	if strings.Contains(strings.Join(arrs, ","), str) {
+	if strings.Contains(strings.Join(arrs, ","), str) && str != "" {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{

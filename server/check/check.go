@@ -144,7 +144,7 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 	}
 
 	titleRowStr := strings.Join(titleRow, ",")
-	notNullColumns := strings.Split("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,是否计提折旧,入账日期,资产原值,折旧方法,资产数量,实际数量", "")
+	notNullColumns := strings.Split("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,是否计提折旧,入账日期,资产原值,折旧方法,资产数量,实际数量", ",")
 	for _, column := range notNullColumns {
 		if !strings.Contains(titleRowStr, column) {
 			errs = append(errs, model.ErrInfo{

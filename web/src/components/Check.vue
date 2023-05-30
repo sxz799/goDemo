@@ -17,7 +17,8 @@
           </a-upload-dragger>
           <h4 style="color: #bc08ef" @click="showNotice">powered by sxz799(点我查看使用说明)</h4>
 
-          <a-tag color="red">1. 人员、部门在组织架构中存在,但是检测后提示不存在,有可能是因为excel表格内容里带上了空格</a-tag>
+          <a-tag color="red">1. 人员、部门在组织架构中存在,但是检测后提示不存在</a-tag>
+          <a-tag color="red">有可能是因为excel表格内容里带上了空格</a-tag>
 
           <a-divider orientation="center">{{ this.fileName}}</a-divider>
           <a-table :locale="tableLocale" :columns="columns" :data-source="tableData"></a-table>
