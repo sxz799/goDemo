@@ -36,7 +36,7 @@ func main() {
 		case filename[len(filename)-4:] == "xlsx":
 			fileType = "xlsx"
 		}
-		num, errs := check.PreCheck(fileType, open)
+		num, errs := check.PreCheck(filename, fileType, open)
 		after := time.Now()
 		duration := after.Sub(before)
 		log.Println("上传了文件:", filename)

@@ -16,7 +16,7 @@ func TestPreCheck(t *testing.T) {
 		log.Println("文件打开失败")
 		return
 	}
-	_, errs = PreCheck("xlsx", open)
+	_, errs = PreCheck("固定资产", "xlsx", open)
 	for _, e := range errs {
 		log.Println(e)
 	}

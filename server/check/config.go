@@ -10,7 +10,7 @@ func init() {
 	TitleCheckFuncMap["资产名称"] = IsCorrectName
 	TitleCheckFuncMap["资产来源"] = IsCorrectComeFrom
 	TitleCheckFuncMap["管理类别"] = IsCorrectManageType
-	TitleCheckFuncMap["类别名称"] = IsCorrectCWType
+	//TitleCheckFuncMap["类别名称"] = IsCorrectCWType
 	TitleCheckFuncMap["资产状态"] = IsCorrectStatus
 	TitleCheckFuncMap["是否计提折旧"] = IsCorrectJiTi
 	TitleCheckFuncMap["入账日期"] = IsCorrectBuyDate

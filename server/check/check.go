@@ -12,7 +12,8 @@ import (
 	"sync"
 )
 
-func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
+func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
+
 	defer func() {
 		if err := recover(); err != nil {
 
@@ -122,12 +123,6 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 	rows = rows[2:]
 	titleRow := rows[0]
 
-	capType := "01" // 默认固定资产
-	if len(titleRow) < 30 {
-
-		capType = "02" //标题数量小于30 说明是地址易耗品
-	}
-
 	titleRight := false
 	for _, cell := range titleRow {
 		if strings.Contains("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,是否计提折旧,入账日期,资产原值,累计折旧,折旧方法,资产数量,净残值率(%),净残值,月折旧率(%),月折旧额,年折旧率(%),年折旧额,存放地点,部门名称,责任人,入账时累计折旧,减值准备,已提月份,未计提月份,单位名称,使用部门,使用人,使用月份,计量单位,备注,实际数量", cell) {
@@ -154,6 +149,24 @@ func PreCheck(fileType string, r io.Reader) (num int, errs []model.ErrInfo) {
 		}
 	}
 
+	capType := ""
+	switch {
+	case strings.Contains(fileName, "固定资产"):
+		capType = "固定资产"
+	case strings.Contains(fileName, "低值易耗品"):
+		capType = "低值易耗品"
+	case strings.Contains(fileName, "无形资产"):
+		capType = "无形资产"
+	}
+
+	if capType == "" {
+		errs = append(errs, model.ErrInfo{
+			ErrorMsg: "文件名不规范",
+			FixMsg:   "文件名中需要包含 固定资产、低值易耗品、无形资产其中一种统计口径!",
+		})
+		return
+	}
+
 	n, errs2 := check(capType, rows)
 	errs = append(errs, errs2...)
 	num = num + n
@@ -177,17 +190,11 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 		}
 	}
 
-	//todo 判断是否缺失某一列
-
 	rows = rows[1:]
-	//gsid的map 用于判断是否存在相同的gsid
-	//var GsIdMp = make(map[string]string)
 
 	var GsIdMp sync.Map
 	var errorMktMap sync.Map
 	var wg sync.WaitGroup
-
-	capTypeError := false
 
 	for index, row := range rows {
 		if strings.Contains(row[0], "合计") {
@@ -400,13 +407,18 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				}
 			}
 
-			if capType == "02" && titleValueMap["类别名称"] != "低值易耗品" && !capTypeError {
-				errs = append(errs, model.ErrInfo{
-					Line:     0,
-					ErrorMsg: "类别名称异常",
-					FixMsg:   "检测到当前表格模板是低值易耗品,类别名称直接填低值易耗品即可!",
-				})
-				capTypeError = true
+			ok, err, tjkj := CheckCWType(titleValueMap["类别名称"])
+			if !ok {
+				err.Line = index + 4
+				errs = append(errs, err)
+			} else {
+				if tjkj != capType {
+					errs = append(errs, model.ErrInfo{
+						Line:     index + 4,
+						ErrorMsg: "资产类别统计口径异常",
+						FixMsg:   "当前资产的资产类别：" + titleValueMap["类别名称"] + "的统计口径是" + tjkj + "与文件名中的" + capType + "不一致,请将此条记录移动到对应统计口径的模板文件中!",
+					})
+				}
 			}
 
 			wg.Done()
