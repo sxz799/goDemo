@@ -158,7 +158,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 			})
 		}
 	}
-	if !strings.Contains(titleRowStr, "是否计提折旧") && fileType != "低值易耗品" {
+	if !strings.Contains(titleRowStr, "是否计提折旧") && capType != "低值易耗品" {
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: "表格结构错误",
 			FixMsg:   "不可缺少 是否计提折旧 列!",
