@@ -138,17 +138,6 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 		return
 	}
 
-	titleRowStr := strings.Join(titleRow, ",")
-	notNullColumns := strings.Split("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,是否计提折旧,入账日期,资产原值,折旧方法,资产数量,实际数量", ",")
-	for _, column := range notNullColumns {
-		if !strings.Contains(titleRowStr, column) {
-			errs = append(errs, model.ErrInfo{
-				ErrorMsg: "表格结构错误",
-				FixMsg:   "不可缺少" + column + "列!",
-			})
-		}
-	}
-
 	capType := ""
 	switch {
 	case strings.Contains(fileName, "固定资产"):
@@ -157,6 +146,23 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 		capType = "低值易耗品"
 	case strings.Contains(fileName, "无形资产"):
 		capType = "无形资产"
+	}
+
+	titleRowStr := strings.Join(titleRow, ",")
+	notNullColumns := strings.Split("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,入账日期,资产原值,折旧方法,资产数量,实际数量", ",")
+	for _, column := range notNullColumns {
+		if !strings.Contains(titleRowStr, column) {
+			errs = append(errs, model.ErrInfo{
+				ErrorMsg: "表格结构错误",
+				FixMsg:   "不可缺少" + column + "列!",
+			})
+		}
+	}
+	if !strings.Contains(titleRowStr, "是否计提折旧") && fileType != "低值易耗品" {
+		errs = append(errs, model.ErrInfo{
+			ErrorMsg: "表格结构错误",
+			FixMsg:   "不可缺少 是否计提折旧 列!",
+		})
 	}
 
 	if capType == "" {
