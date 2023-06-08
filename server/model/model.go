@@ -12,9 +12,8 @@ type Response struct {
 	ErrInfos []ErrInfo `json:"errInfos"`
 }
 
-type Dept struct {
-	Name string
-	Code string
+type Organization struct {
+	Dept string
 	Mkt  string
 }
 type User struct {

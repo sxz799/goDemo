@@ -14,6 +14,6 @@ func init() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	DB.AutoMigrate(model.Dept{})
+	DB.AutoMigrate(model.Organization{})
 	DB.AutoMigrate(model.User{})
 }

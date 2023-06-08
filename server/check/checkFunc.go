@@ -234,9 +234,9 @@ func IsCorrectMKT(str string) (bool, model.ErrInfo) {
 		return false, errInfo
 	}
 
-	var dept model.Dept
-	utils.DB.Where("mkt=?", str).First(&dept)
-	if dept.Code == "" {
+	var o model.Organization
+	utils.DB.Where("mkt=?", str).First(&o)
+	if o.Mkt == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值： " + str,
 			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
@@ -250,9 +250,9 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 	if isNull, errInfo := checkNull(dept); isNull {
 		return false, errInfo
 	}
-	var d model.Dept
-	utils.DB.Where("mkt=? and name=?", mkt, dept).First(&d)
-	if d.Code == "" {
+	var o model.Organization
+	utils.DB.Where("mkt=? and dept=?", mkt, dept).First(&o)
+	if o.Dept == "" {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值： " + dept,
 			FixMsg:   "没有找到该部门!(请填入提供的组织架构中的部门名称)",
