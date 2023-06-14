@@ -125,7 +125,7 @@ func IsCorrectName(str string) (bool, model.ErrInfo) {
 
 func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
 	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售"}
-	if strings.Contains(strings.Join(arrs, ","), str) {
+	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
@@ -154,7 +154,7 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 		"招商中心-百货经营设备",
 		"运营中心-百货营运设备",
 	}
-	if strings.Contains(strings.Join(arrs, ","), str) {
+	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
@@ -173,7 +173,7 @@ func IsCorrectStatus(str string) (bool, model.ErrInfo) {
 		"在途",
 		"已售",
 		"已拆分"}
-	if strings.Contains(strings.Join(arrs, ","), str) && str != "" {
+	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
@@ -219,7 +219,7 @@ func IsCorrectZJSF(str string) (bool, model.ErrInfo) {
 		"新准则",
 		"一次性摊销",
 		"减值或变动后的平均年限法"}
-	if strings.Contains(strings.Join(arrs, ","), str) && str != "" {
+	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
@@ -297,11 +297,11 @@ func CheckCWType(str string) (bool, model.ErrInfo, string) {
 		"网络资产",
 	}
 	switch {
-	case strings.Contains(strings.Join(arrs1, ","), str):
+	case len(str) > 0 && strings.Contains(strings.Join(arrs1, ","), str):
 		return true, model.ErrInfo{}, "固定资产"
 	case arrs2 == str:
 		return true, model.ErrInfo{}, "低值易耗品"
-	case strings.Contains(strings.Join(arrs3, ","), str):
+	case len(str) > 0 && strings.Contains(strings.Join(arrs3, ","), str):
 		return true, model.ErrInfo{}, "无形资产"
 	}
 
