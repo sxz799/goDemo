@@ -1,9 +1,7 @@
 package check
 
 import (
-	"bytes"
 	"fmt"
-	"github.com/extrame/xls"
 	"github.com/xuri/excelize/v2"
 	"gsCheck/model"
 	"io"
@@ -45,7 +43,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 			})
 		}
 		sheets := excelFile.GetSheetList()
-		rows, _ = excelFile.GetRows(sheets[0])
+		rows, _ = excelFile.GetRows(sheets[0], excelize.Options{RawCellValue: true})
 		if len(rows) < 4 {
 			errs = append(errs, model.ErrInfo{
 				ErrorMsg: "格式不正确",
@@ -56,58 +54,9 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 	case "xls":
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: "文件类型兼容性差",
-			FixMsg:   "检测到正在使用xls类型文件,强烈推荐导出xlsx类型的文件进行检测!",
+			FixMsg:   "xls文件读取失败,请按照使用说明导出格式为xlsx的文件进行检测",
 		})
-		var buf bytes.Buffer
-		_, err := io.Copy(&buf, r) // 将 io.Reader 对象读取到缓冲区中
-		if err != nil {
-			errs = append(errs, model.ErrInfo{
-				ErrorMsg: err.Error(),
-				FixMsg:   "xls文件读取失败,请按照使用说明导出格式为xlsx的文件进行检测",
-			})
-			return
-		}
-		reader := bytes.NewReader(buf.Bytes())
-		excelFile, err := xls.OpenReader(reader, "utf-8")
-		count := excelFile.NumSheets()
-		if count != 1 {
-			errs = append(errs, model.ErrInfo{
-				ErrorMsg: "sheet工作表太多",
-				FixMsg:   "请仅保留一个工作表,当前文件有" + strconv.Itoa(count) + "个sheet表(如果仍提示此错误,请右键点击左下角现在的工作表并点击`取消隐藏工作表`)",
-			})
-		}
-		sheet := excelFile.GetSheet(0)
-		maxRow := sheet.MaxRow
-		if maxRow < 4 {
-			errs = append(errs, model.ErrInfo{
-				ErrorMsg: "表格式不正确",
-				FixMsg:   "资产编号,资产名称,资产来源等标题要在第三行,且第4行要有数据",
-			})
-			return
-		}
-		row := sheet.Row(2)
-
-		lastCol := row.LastCol()
-
-		for strings.ReplaceAll(row.Col(lastCol), " ", "") == "" && lastCol > 0 {
-			lastCol--
-		}
-		if lastCol < 3 {
-			errs = append(errs, model.ErrInfo{
-				ErrorMsg: "表格式不正确",
-				FixMsg:   "资产编号,资产名称,资产来源等标题要在第三行",
-			})
-			return
-		}
-		for i := 0; i < int(maxRow); i++ {
-			row = sheet.Row(i)
-			trow := make([]string, 0)
-			//这里用 `<=` 是因为row.LastCol()是数量 而不是索引
-			for j := 0; j <= lastCol; j++ {
-				trow = append(trow, row.Col(j))
-			}
-			rows = append(rows, trow)
-		}
+		return
 	}
 	if rows[0] != nil && rows[1] != nil {
 		if rows[0][0] != "" || rows[1][0] != "" {
