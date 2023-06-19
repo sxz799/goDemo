@@ -43,7 +43,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 			})
 		}
 		sheets := excelFile.GetSheetList()
-		rows, _ = excelFile.GetRows(sheets[0], excelize.Options{RawCellValue: true})
+		rows, _ = excelFile.GetRows(sheets[0])
 		if len(rows) < 4 {
 			errs = append(errs, model.ErrInfo{
 				ErrorMsg: "格式不正确",
