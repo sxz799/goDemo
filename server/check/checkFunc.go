@@ -56,7 +56,7 @@ func IsDoubleNum(str string) (bool, model.ErrInfo) {
 		}
 	}
 	if strings.Contains(str, ".") {
-		if len(str)-strings.Index(str, ".")-1 > 2 {
+		if len(str)-strings.Index(str, ".")-1 > 2 && !strings.Contains(str, "0000000000") && !strings.Contains(str, "9999999999") {
 			return false, model.ErrInfo{
 				ErrorMsg: "  异常！错误值： " + str,
 				FixMsg:   "金额小数点后只能有两位!",
