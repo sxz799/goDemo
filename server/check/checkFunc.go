@@ -153,6 +153,7 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 		"超市事业部-营运设备",
 		"招商中心-百货经营设备",
 		"运营中心-百货营运设备",
+		"商标",
 	}
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
