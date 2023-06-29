@@ -124,7 +124,7 @@ func IsCorrectName(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售"}
+	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售", "平移（内部）", "其它"}
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
