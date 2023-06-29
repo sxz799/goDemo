@@ -283,7 +283,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 									errs = append(errs, errInfo)
 								}
 							}
-						} else {
+						} else if len(users) > 0 {
 							correct, errInfo = IsCorrectUser(users, mkt)
 							if !correct {
 								if !correct {
