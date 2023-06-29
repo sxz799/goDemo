@@ -337,13 +337,6 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				ytyf, _ := strconv.Atoi(titleValueMap["已提月份"])
 				wtyf, _ := strconv.Atoi(titleValueMap["未计提月份"])
 
-				if wtyf < 1 {
-					errs = append(errs, model.ErrInfo{
-						Line:     index + 4,
-						ErrorMsg: "未计提月份异常",
-						FixMsg:   "计提折旧时未计提月份不可小于1",
-					})
-				}
 				if syyf != ytyf+wtyf {
 					errs = append(errs, model.ErrInfo{
 						Line:     index + 4,
