@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -36,22 +37,22 @@ func main() {
 		case filename[len(filename)-4:] == "xlsx":
 			fileType = "xlsx"
 		}
-		num, errs := check.PreCheck(filename, fileType, open)
+		num, errs2 := check.PreCheck(filename, fileType, open)
 
-		//mp := make(map[string]string)
-		//var errs []model.ErrInfo
-		//for _, e := range errs2 {
-		//
-		//	if strings.Contains(e.ErrorMsg, "使用人") {
-		//		_, v := mp[e.ErrorMsg]
-		//		if !v {
-		//			mp[e.ErrorMsg] = e.ErrorMsg
-		//			errs = append(errs, e)
-		//		}
-		//
-		//	}
-		//
-		//}
+		mp := make(map[string]string)
+		var errs []model.ErrInfo
+		for _, e := range errs2 {
+
+			if strings.Contains(e.ErrorMsg, "部门") {
+				_, v := mp[e.ErrorMsg]
+				if !v {
+					mp[e.ErrorMsg] = e.ErrorMsg
+					errs = append(errs, e)
+				}
+
+			}
+
+		}
 
 		after := time.Now()
 		duration := after.Sub(before)
