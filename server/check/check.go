@@ -326,10 +326,8 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 								}
 							}
 						}
-
 					}
 				}
-
 			}
 
 			if titleValueMap["是否计提折旧"] == "是" {
