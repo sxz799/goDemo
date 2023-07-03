@@ -233,13 +233,13 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				})
 			}
 
-			if capRealNum > 1 && capRealNum < 10 {
-				errs = append(errs, model.ErrInfo{
-					Line:     index + 4,
-					ErrorMsg: "实际数量异常",
-					FixMsg:   "使用大码管理时,实际数量不可小于10",
-				})
-			}
+			//if capRealNum > 1 && capRealNum < 10 {
+			//	errs = append(errs, model.ErrInfo{
+			//		Line:     index + 4,
+			//		ErrorMsg: "实际数量异常",
+			//		FixMsg:   "使用大码管理时,实际数量不可小于10",
+			//	})
+			//}
 
 			mkt, ok := titleValueMap["单位名称"]
 			if ok {
@@ -265,7 +265,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 						errs = append(errs, errInfo)
 					}
 
-					users, ok := titleValueMap["责任人"]
+					users, ok := titleValueMap["责任人1"]
 					if ok {
 						if strings.Contains(users, "+") {
 							if capNum > 0 && capNum != len(strings.Split(users, "+")) {
@@ -283,7 +283,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 									errs = append(errs, errInfo)
 								}
 							}
-						} else {
+						} else if len(users) > 0 {
 							correct, errInfo = IsCorrectUser(users, mkt)
 							if !correct {
 								if !correct {
@@ -296,7 +296,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 
 					}
 
-					users2, ok := titleValueMap["使用人"]
+					users2, ok := titleValueMap["使用人1"]
 					if ok {
 						if strings.Contains(users2, "+") {
 							if capNum > 0 && capNum != len(strings.Split(users2, "+")) {
@@ -335,13 +335,6 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				ytyf, _ := strconv.Atoi(titleValueMap["已提月份"])
 				wtyf, _ := strconv.Atoi(titleValueMap["未计提月份"])
 
-				if wtyf < 1 {
-					errs = append(errs, model.ErrInfo{
-						Line:     index + 4,
-						ErrorMsg: "未计提月份异常",
-						FixMsg:   "计提折旧时未计提月份不可小于1",
-					})
-				}
 				if syyf != ytyf+wtyf {
 					errs = append(errs, model.ErrInfo{
 						Line:     index + 4,
