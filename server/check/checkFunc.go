@@ -124,7 +124,7 @@ func IsCorrectName(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售"}
+	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售", "平移（内部）", "其它"}
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
@@ -153,6 +153,7 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 		"超市事业部-营运设备",
 		"招商中心-百货经营设备",
 		"运营中心-百货营运设备",
+		"商标",
 	}
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
