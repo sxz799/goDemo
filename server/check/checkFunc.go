@@ -1,6 +1,7 @@
 package check
 
 import (
+	"gsCheck/config"
 	"gsCheck/model"
 	"gsCheck/utils"
 	"strconv"
@@ -124,7 +125,7 @@ func IsCorrectName(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"购置", "自建", "投资人投入", "接受捐赠", "盘盈", "内部销售", "平移（内部）", "其它"}
+	var arrs = config.CapComeFrom
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
@@ -137,24 +138,7 @@ func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectManageType(str string) (bool, model.ErrInfo) {
-	var arrs = []string{
-		"软件",
-		"土地",
-		"财务管理中心-税控类设备",
-		"物业安全中心-保洁设备",
-		"物业安全中心-安保设备",
-		"物业安全中心-弱电设备",
-		"物业安全中心-强电设备",
-		"物业安全中心-水暖设备",
-		"办公室-办公设备",
-		"办公室-运输设备",
-		"研发中心-信息设备",
-		"超市事业部-经营设备",
-		"超市事业部-营运设备",
-		"招商中心-百货经营设备",
-		"运营中心-百货营运设备",
-		"商标",
-	}
+	var arrs = config.CapManageType
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
@@ -166,14 +150,7 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectStatus(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"在用",
-		"在库",
-		"闲置",
-		"报废",
-		"报损",
-		"在途",
-		"已售",
-		"已拆分"}
+	var arrs = config.CapStatus
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
@@ -213,13 +190,7 @@ func IsCorrectBuyDate(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectZJSF(str string) (bool, model.ErrInfo) {
-	var arrs = []string{"平均年限法",
-		"工作量法",
-		"双倍余额递",
-		"年数总和法",
-		"新准则",
-		"一次性摊销",
-		"减值或变动后的平均年限法"}
+	var arrs = config.CapZJSF
 	if len(str) > 0 && strings.Contains(strings.Join(arrs, ","), str) {
 		return true, model.ErrInfo{}
 	} else {
