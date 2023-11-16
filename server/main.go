@@ -1,26 +1,33 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"embed"
 	"gsCheck/check"
 	"gsCheck/model"
+	"html/template"
+	"io/fs"
 	"log"
-	"os"
+	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
+
+//go:embed dist/*
+var content embed.FS
 
 func main() {
 	r := gin.Default()
 
-	_, err := os.Stat("dist")
-	if err == nil {
-		r.LoadHTMLGlob("dist/index.html")
-		r.Static("/dist", "dist")
-		r.GET("/", func(context *gin.Context) {
-			context.HTML(200, "index.html", "")
-		})
-	}
+	temp := template.Must(template.New("").ParseFS(content, "dist/*.html"))
+	r.SetHTMLTemplate(temp)
+	distFS, _ := fs.Sub(content, "dist")
+	r.StaticFS("/dist", http.FS(distFS))
+	r.NoRoute(func(context *gin.Context) {
+		context.HTML(200, "index.html", "")
+	})
+	log.Println("已开启前后端整合模式！")
 
 	r.POST("/api/upload", func(c *gin.Context) {
 		file, _ := c.FormFile("file")
