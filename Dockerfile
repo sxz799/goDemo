@@ -27,7 +27,14 @@ FROM alpine:latest
 
 WORKDIR /home
 
+RUN apk --no-cache add bash
+
+RUN apk update && apk add tzdata 
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 
+RUN echo "Asia/Shanghai" > /etc/timezone
+
 COPY --from=1 /go/src/github.com/sxz799/gsCheck-server/app ./
+COPY --from=1 /go/src/github.com/sxz799/gsCheck-server/conf.yaml ./
 
 EXPOSE 7990
 

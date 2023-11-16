@@ -46,7 +46,8 @@ jobs:
       run: |
         mkdir gsCheck
         mv server/bin/app gsCheck/
-   
+        mv server/conf.yaml gsCheck/
+        
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
