@@ -39,13 +39,13 @@ jobs:
         go-version: 1.21
 
     - name: Build Server
-      run:  go build -ldflags="-s -w" -o bin/app .
+      run:  go build -ldflags="-s -w" -o bin/gsCheckApp .
       working-directory: ./server
       
     - name: Move Files
       run: |
         mkdir gsCheck
-        mv server/bin/app gsCheck/
+        mv server/bin/gsCheckApp gsCheck/
         mv server/conf.yaml gsCheck/
         
     - name: Upload artifact
