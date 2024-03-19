@@ -9,11 +9,11 @@ func init() {
 	//TitleCheckFuncMap["资产编号"] = IsCorrectGSID
 	TitleCheckFuncMap["资产名称"] = IsCorrectName
 	TitleCheckFuncMap["资产来源"] = IsCorrectComeFrom
-	TitleCheckFuncMap["管理类别"] = IsCorrectManageType
+	TitleCheckFuncMap["管理类别名称"] = IsCorrectManageType
 	//TitleCheckFuncMap["类别名称"] = IsCorrectCWType
-	TitleCheckFuncMap["资产状态"] = IsCorrectStatus
+	TitleCheckFuncMap["资产状态名称"] = IsCorrectStatus
 	TitleCheckFuncMap["是否计提折旧"] = IsCorrectJiTi
-	TitleCheckFuncMap["入账日期"] = IsCorrectBuyDate
+	// TitleCheckFuncMap["入账日期"] = IsCorrectBuyDate
 	TitleCheckFuncMap["资产原值"] = IsDoubleNum
 	TitleCheckFuncMap["累计折旧"] = IsDoubleNum
 	TitleCheckFuncMap["折旧方法"] = IsCorrectZJSF
@@ -29,7 +29,7 @@ func init() {
 	TitleCheckFuncMap["入账时累计折旧"] = IsDoubleNum
 	TitleCheckFuncMap["减值准备"] = IsDoubleNum
 	TitleCheckFuncMap["已提月份"] = IsIntNum
-	TitleCheckFuncMap["未计提月份"] = IsIntNum
+	TitleCheckFuncMap["剩余月份"] = IsIntNum
 	//TitleCheckFuncMap["单位名称"] = IsCorrectMKT
 	//TitleCheckFuncMap["使用部门"] = IsCorrectDept
 	//TitleCheckFuncMap["使用人"] = IsCorrectUser

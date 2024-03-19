@@ -74,7 +74,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 
 	titleRight := false
 	for _, cell := range titleRow {
-		if len(cell) > 0 && strings.Contains("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,是否计提折旧,入账日期,资产原值,累计折旧,折旧方法,资产数量,净残值率(%),净残值,月折旧率(%),月折旧额,年折旧率(%),年折旧额,存放地点,部门名称,责任人,入账时累计折旧,减值准备,已提月份,未计提月份,单位名称,使用部门,使用人,使用月份,计量单位,备注,实际数量", cell) {
+		if len(cell) > 0 && strings.Contains("账簿名称	资产名称	资产编号	资产类别名称	折旧方法名称	资产状态名称	资产来源名称	入账日期	所属部门名称	资产数量	资产原值	使用月份	入账折旧	净残值率(%)	净残值	减值准备	月折旧率(%)	月折旧额	年折旧率(%)	年折旧额	已提月份	剩余月份	累计折旧	品牌型号	使用人名称	计量单位	存放地点名称	责任人名称	使用部门名称	是否计提折旧	管理类别	实际数量	标准资产型号	生产日期	设备序列号	GMP编码	生产厂商	备注	供应商编码	契税	车辆购置税", cell) {
 			titleRight = true
 			break
 		}
@@ -98,7 +98,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 	}
 
 	titleRowStr := strings.Join(titleRow, ",")
-	notNullColumns := strings.Split("资产编号,资产名称,资产来源,管理类别,类别名称,资产状态,入账日期,资产原值,折旧方法,资产数量,实际数量", ",")
+	notNullColumns := strings.Split("资产编号,资产名称,资产来源名称,管理类别,资产类别名称,资产状态名称,入账日期,资产原值,折旧方法名称,资产数量,实际数量", ",")
 	for _, column := range notNullColumns {
 		if !strings.Contains(titleRowStr, column) {
 			errs = append(errs, model.ErrInfo{
@@ -241,31 +241,31 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 			//	})
 			//}
 
-			mkt, ok := titleValueMap["单位名称"]
+			mkt, ok := titleValueMap["账簿名称"]
 			if ok {
 				correct, errInfo := IsCorrectMKT(mkt)
 				_, mktExist := errorMktMap.Load(mkt)
 				if !correct && !mktExist {
 					errorMktMap.Store(mkt, mkt)
 					errInfo.Line = index + 4
-					errInfo.ErrorMsg = "单位名称" + errInfo.ErrorMsg
-					errInfo.FixMsg = errInfo.FixMsg + "(单位名称错误只记录一条,但所有的记录都要修改)"
+					errInfo.ErrorMsg = "账簿名称" + errInfo.ErrorMsg
+					errInfo.FixMsg = errInfo.FixMsg + "(账簿名称错误只记录一条,但所有的记录都要修改)"
 					errs = append(errs, errInfo)
 				} else if correct {
-					correct, errInfo = IsCorrectDept(titleValueMap["部门名称"], mkt)
+					correct, errInfo = IsCorrectDept(titleValueMap["所属部门名称"], mkt)
 					if !correct {
 						errInfo.Line = index + 4
-						errInfo.ErrorMsg = "部门名称" + errInfo.ErrorMsg
+						errInfo.ErrorMsg = "所属部门名称" + errInfo.ErrorMsg
 						errs = append(errs, errInfo)
 					}
-					correct, errInfo = IsCorrectDept(titleValueMap["使用部门"], mkt)
+					correct, errInfo = IsCorrectDept(titleValueMap["使用部门名称"], mkt)
 					if !correct {
 						errInfo.Line = index + 4
-						errInfo.ErrorMsg = "使用部门" + errInfo.ErrorMsg
+						errInfo.ErrorMsg = "使用部门名称" + errInfo.ErrorMsg
 						errs = append(errs, errInfo)
 					}
 
-					users, ok := titleValueMap["责任人1"]
+					users, ok := titleValueMap["责任人名称"]
 					if ok {
 						if strings.Contains(users, "+") {
 							if capNum > 0 && capNum != len(strings.Split(users, "+")) {
@@ -296,7 +296,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 
 					}
 
-					users2, ok := titleValueMap["使用人1"]
+					users2, ok := titleValueMap["使用人名称"]
 					if ok {
 						if strings.Contains(users2, "+") {
 							if capNum > 0 && capNum != len(strings.Split(users2, "+")) {
@@ -333,7 +333,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 			if titleValueMap["是否计提折旧"] == "是" {
 				syyf, _ := strconv.Atoi(titleValueMap["使用月份"])
 				ytyf, _ := strconv.Atoi(titleValueMap["已提月份"])
-				wtyf, _ := strconv.Atoi(titleValueMap["未计提月份"])
+				wtyf, _ := strconv.Atoi(titleValueMap["剩余月份"])
 
 				if syyf != ytyf+wtyf {
 					errs = append(errs, model.ErrInfo{
@@ -353,7 +353,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				}
 			}
 
-			ok, err, tjkj := CheckCWType(titleValueMap["类别名称"])
+			ok, err, tjkj := CheckCWType(titleValueMap["资产类别名称"])
 			if !ok {
 				err.Line = index + 4
 				errs = append(errs, err)
@@ -362,7 +362,7 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 					errs = append(errs, model.ErrInfo{
 						Line:     index + 4,
 						ErrorMsg: "资产类别统计口径异常",
-						FixMsg:   "当前资产的资产类别：" + titleValueMap["类别名称"] + "的统计口径是" + tjkj + "与文件名中的" + capType + "不一致,请将此条记录移动到对应统计口径的模板文件中!",
+						FixMsg:   "当前资产的资产类别：" + titleValueMap["资产类别名称"] + "的统计口径是" + tjkj + "与文件名中的" + capType + "不一致,请将此条记录移动到对应统计口径的模板文件中!",
 					})
 				}
 			}
