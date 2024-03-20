@@ -95,6 +95,13 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 		capType = "低值易耗品"
 	case strings.Contains(fileName, "无形资产"):
 		capType = "无形资产"
+	case strings.Contains(fileName, "投资性房地产"):
+		capType = "投资性房地产"
+	case strings.Contains(fileName, "长期待摊费用"):
+		capType = "长期待摊费用"
+	case strings.Contains(fileName, "代管资产"):
+		capType = "代管资产"
+
 	}
 
 	titleRowStr := strings.Join(titleRow, ",")
@@ -117,7 +124,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 	if capType == "" {
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: "文件名不规范",
-			FixMsg:   "文件名中需要包含 固定资产、低值易耗品、无形资产其中一种统计口径!",
+			FixMsg:   "文件名中需要包含 固定资产 低值易耗品 无形资产 投资性房地产 长期待摊费用 代管资产其中一种统计口径!",
 		})
 		return
 	}

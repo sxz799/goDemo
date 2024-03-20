@@ -249,37 +249,30 @@ func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
 }
 
 func CheckCWType(str string) (bool, model.ErrInfo, string) {
-	var arrs1 = []string{
-		"运输工具",
-		"营业设备",
-		"办公设备",
-		"工会设备",
-		"电子设备",
-		"机器设备",
-		"房屋建筑物",
-		"安全生产设备",
-		"其他设备",
-	}
-	var arrs2 = "低值易耗品"
-	var arrs3 = []string{
-		"软件",
-		"土地",
-		"商标",
-		"专利",
-		"网络资产",
-	}
 	switch {
-	case len(str) > 0 && strings.Contains(strings.Join(arrs1, ","), str):
+	case len(str) > 0 && strings.Contains(strings.Join(config.CapCWCat01, ","), str):
 		return true, model.ErrInfo{}, "固定资产"
-	case arrs2 == str:
+	case len(str) > 0 && strings.Contains(strings.Join(config.CapCWCat02, ","), str):
 		return true, model.ErrInfo{}, "低值易耗品"
-	case len(str) > 0 && strings.Contains(strings.Join(arrs3, ","), str):
+	case len(str) > 0 && strings.Contains(strings.Join(config.CapCWCat03, ","), str):
 		return true, model.ErrInfo{}, "无形资产"
+	case len(str) > 0 && strings.Contains(strings.Join(config.CapCWCat04, ","), str):
+		return true, model.ErrInfo{}, "投资性房地产"
+	case len(str) > 0 && strings.Contains(strings.Join(config.CapCWCat05, ","), str):
+		return true, model.ErrInfo{}, "长期待摊费用"
+	case len(str) > 0 && strings.Contains(strings.Join(config.CapCWCat06, ","), str):
+		return true, model.ErrInfo{}, "代管资产"
 	}
 
 	return false, model.ErrInfo{
 		ErrorMsg: "  异常！错误值： " + str,
-		FixMsg:   "正确内容为 " + strings.Join(arrs1, " , ") + " , " + arrs2 + " , " + strings.Join(arrs3, " , "),
+		FixMsg:   "正确内容为 " + 
+		strings.Join(config.CapCWCat01, " , ") + " , " + 
+		strings.Join(config.CapCWCat02, " , ") + " , " +
+		strings.Join(config.CapCWCat03, " , ")+ " , " + 
+		strings.Join(config.CapCWCat04, " , ")+ " , " + 
+		strings.Join(config.CapCWCat05, " , ")+ " , " + 
+		strings.Join(config.CapCWCat06, " , "),
 	}, ""
 
 }
