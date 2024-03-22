@@ -1,7 +1,7 @@
 <template>
   <a-row type="flex">
-    <a-col :span="2"></a-col>
-    <a-col :span="20">
+    <a-col :span="1"></a-col>
+    <a-col :span="22">
       <div style="padding-inline: 20%;">
         <a-card style="text-align: center">
           <h2 style="color: #0034ff">资产系统导入模板检验工具</h2>
@@ -22,7 +22,7 @@
         </a-card>
       </div>
     </a-col>
-    <a-col :span="2"></a-col>
+    <a-col :span="1"></a-col>
   </a-row>
 
   <a-modal

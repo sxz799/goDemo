@@ -31,13 +31,13 @@ func IsIntNum(str string) (bool, model.ErrInfo) {
 	num, err := strconv.Atoi(str)
 	if err != nil {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "必须是整数",
 		}
 	}
 	if num < 0 {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "不可以小于0",
 		}
 	}
@@ -52,14 +52,14 @@ func IsDoubleNum(str string) (bool, model.ErrInfo) {
 	_, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "请填写金额类型 如果有千分位逗号分隔,请去掉',' [tips: ctrl + f 批量替换 将 , 批量替换为空(`替换为`那里留空，不是替换成空格)] ",
 		}
 	}
 	if strings.Contains(str, ".") {
 		if len(str)-strings.Index(str, ".")-1 > 2 {
 			return false, model.ErrInfo{
-				ErrorMsg: "  异常！错误值： " + str,
+				ErrorMsg: "  异常！错误值->" + str,
 				FixMsg:   "金额小数点后只能有两位!",
 			}
 		}
@@ -96,20 +96,20 @@ func IsCorrectRate(str string) (bool, model.ErrInfo) {
 	rate, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "请填写数字类型",
 		}
 	}
 	if rate > 100 || rate < 0 {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "值不可大于100%或小于0",
 		}
 	}
 	// if strings.Contains(str, ".") {
 	// 	if len(str)-strings.Index(str, ".")-1 > 2 {
 	// 		return false, model.ErrInfo{
-	// 			ErrorMsg: "  异常！错误值： " + str,
+	// 			ErrorMsg: "  异常！错误值->" + str,
 	// 			FixMsg:   "小数点后只能有两位!",
 	// 		}
 	// 	}
@@ -130,7 +130,7 @@ func IsCorrectComeFrom(str string) (bool, model.ErrInfo) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "正确内容为 " + strings.Join(arrs, " , "),
 		}
 	}
@@ -143,7 +143,7 @@ func IsCorrectManageType(str string) (bool, model.ErrInfo) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "正确内容为 " + strings.Join(arrs, " , "),
 		}
 	}
@@ -155,7 +155,7 @@ func IsCorrectStatus(str string) (bool, model.ErrInfo) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "正确内容为 " + strings.Join(arrs, " , "),
 		}
 	}
@@ -166,7 +166,7 @@ func IsCorrectJiTi(str string) (bool, model.ErrInfo) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "修改提示: 只能填写 是 或者 否",
 		}
 	}
@@ -175,14 +175,14 @@ func IsCorrectJiTi(str string) (bool, model.ErrInfo) {
 func IsCorrectBuyDate(str string) (bool, model.ErrInfo) {
 	if len(str) != 8 {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "日期格式为20230501(若修改后仍提示错误,请将日期列的单元格类型修改为文本)",
 		}
 	}
 	_, err := strconv.Atoi(str)
 	if err != nil {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "日期格式为20230501(若修改后仍提示错误,请将日期列的单元格类型修改为文本)",
 		}
 	}
@@ -195,7 +195,7 @@ func IsCorrectZJSF(str string) (bool, model.ErrInfo) {
 		return true, model.ErrInfo{}
 	} else {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "正确内容为 " + strings.Join(arrs, " , "),
 		}
 	}
@@ -210,7 +210,7 @@ func IsCorrectMKT(str string) (bool, model.ErrInfo) {
 	utils.DB.Where("mkt=?", str).First(&o)
 	if o.Mkt == "" {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + str,
+			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
 		}
 	}
@@ -226,7 +226,7 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 	utils.DB.Where("mkt=? and dept=?", mkt, dept).First(&o)
 	if o.Dept == "" {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + dept,
+			ErrorMsg: "  异常！错误值->" + dept,
 			FixMsg:   "没有找到该部门!(请填入提供的组织架构中的部门名称)",
 		}
 	}
@@ -241,7 +241,7 @@ func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
 	utils.DB.Where("mkt=? and name=?", mkt, name).First(&u)
 	if u.Name == "" {
 		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值： " + name,
+			ErrorMsg: "  异常！错误值->" + name,
 			FixMsg:   "没有找到该用户!(请填入提供的组织架构中的用户姓名)",
 		}
 	}
@@ -265,14 +265,14 @@ func CheckCWType(str string) (bool, model.ErrInfo, string) {
 	}
 
 	return false, model.ErrInfo{
-		ErrorMsg: "  异常！错误值： " + str,
-		FixMsg:   "正确内容为 " + 
-		strings.Join(config.CapCWCat01, " , ") + " , " + 
-		strings.Join(config.CapCWCat02, " , ") + " , " +
-		strings.Join(config.CapCWCat03, " , ")+ " , " + 
-		strings.Join(config.CapCWCat04, " , ")+ " , " + 
-		strings.Join(config.CapCWCat05, " , ")+ " , " + 
-		strings.Join(config.CapCWCat06, " , "),
+		ErrorMsg: "  异常！错误值->" + str,
+		FixMsg: "正确内容为 " +
+			strings.Join(config.CapCWCat01, " , ") + " , " +
+			strings.Join(config.CapCWCat02, " , ") + " , " +
+			strings.Join(config.CapCWCat03, " , ") + " , " +
+			strings.Join(config.CapCWCat04, " , ") + " , " +
+			strings.Join(config.CapCWCat05, " , ") + " , " +
+			strings.Join(config.CapCWCat06, " , "),
 	}, ""
 
 }
