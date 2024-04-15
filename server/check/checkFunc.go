@@ -180,13 +180,6 @@ func IsCorrectBuyDate(str string) (bool, model.ErrInfo) {
 			FixMsg:   "日期格式为2023-05-01(若修改后仍提示错误,请将日期列的单元格类型修改为文本)",
 		}
 	}
-	_, err := strconv.Atoi(str)
-	if err != nil {
-		return false, model.ErrInfo{
-			ErrorMsg: "  异常！错误值->" + str,
-			FixMsg:   "日期格式为2023-05-01(若修改后仍提示错误,请将日期列的单元格类型修改为文本)",
-		}
-	}
 	return true, model.ErrInfo{}
 }
 
