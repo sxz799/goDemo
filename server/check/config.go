@@ -13,7 +13,7 @@ func init() {
 	TitleCheckFuncMap["是否计提折旧"] = IsCorrectJiTi
 	TitleCheckFuncMap["资产原值"] = IsDoubleNum
 	TitleCheckFuncMap["累计折旧"] = IsDoubleNum
-	TitleCheckFuncMap["折旧方法"] = IsCorrectZJSF
+	TitleCheckFuncMap["折旧方法名称"] = IsCorrectZJSF
 	TitleCheckFuncMap["资产数量"] = IsIntNum
 	TitleCheckFuncMap["净残值率(%)"] = IsCorrectRate
 	TitleCheckFuncMap["净残值"] = IsDoubleNum
