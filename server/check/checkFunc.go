@@ -1,7 +1,7 @@
 package check
 
 import (
-	"fmt"
+
 	"gsCheck/config"
 	"gsCheck/model"
 	"gsCheck/utils"
@@ -174,8 +174,7 @@ func IsCorrectJiTi(str string) (bool, model.ErrInfo) {
 }
 
 func IsCorrectBuyDate(str string) (bool, model.ErrInfo) {
-	fmt.Println(str)
-	if len(str) < 8 || len(str) > 12 || len(strings.Split(str, "-")) != 3 {
+	if len(strings.Split(str, "-")) != 3 {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "日期格式为2023-05-01(若修改后仍提示错误,请将日期列的单元格类型修改为文本)",
