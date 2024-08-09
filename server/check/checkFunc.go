@@ -1,13 +1,15 @@
 package check
 
 import (
-
 	"gsCheck/config"
 	"gsCheck/model"
-	"gsCheck/utils"
 	"strconv"
 	"strings"
 )
+
+var MktMap map[string]struct{}
+var OrgMap map[model.Organization]struct{}
+var UserMap map[model.User]struct{}
 
 func checkNull(str string) (bool, model.ErrInfo) {
 	if len(strings.ReplaceAll(str, " ", "")) < 1 {
@@ -200,9 +202,8 @@ func IsCorrectMKT(str string) (bool, model.ErrInfo) {
 		return false, errInfo
 	}
 
-	var o model.Organization
-	utils.DB.Where("mkt=?", str).First(&o)
-	if o.Mkt == "" {
+	_, found := MktMap[str]
+	if !found {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值->" + str,
 			FixMsg:   "没有找到该门店!(请填入提供的组织架构中的门店名称)",
@@ -216,9 +217,11 @@ func IsCorrectDept(dept, mkt string) (bool, model.ErrInfo) {
 	if isNull, errInfo := checkNull(dept); isNull {
 		return false, errInfo
 	}
-	var o model.Organization
-	utils.DB.Where("mkt=? and dept=?", mkt, dept).First(&o)
-	if o.Dept == "" {
+	_, found := OrgMap[model.Organization{
+		Dept: dept,
+		Mkt:  mkt,
+	}]
+	if !found {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值->" + dept,
 			FixMsg:   "没有找到该部门!(请填入提供的组织架构中的部门名称)",
@@ -231,9 +234,11 @@ func IsCorrectUser(name, mkt string) (bool, model.ErrInfo) {
 	if isNull, errInfo := checkNull(name); isNull {
 		return false, errInfo
 	}
-	var u model.User
-	utils.DB.Where("mkt=? and name=?", mkt, name).First(&u)
-	if u.Name == "" {
+	_, found := UserMap[model.User{
+		Name: name,
+		Mkt:  mkt,
+	}]
+	if !found {
 		return false, model.ErrInfo{
 			ErrorMsg: "  异常！错误值->" + name,
 			FixMsg:   "没有找到该用户!(请填入提供的组织架构中的用户姓名)",

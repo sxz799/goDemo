@@ -4,6 +4,7 @@ go 1.21
 
 require (
 	github.com/gin-gonic/gin v1.9.0
+	github.com/sijms/go-ora/v2 v2.8.19
 	github.com/spf13/viper v1.16.0
 	github.com/xuri/excelize/v2 v2.7.1
 	gorm.io/driver/sqlite v1.5.0

@@ -4,6 +4,7 @@ import (
 	"embed"
 	"gsCheck/check"
 	"gsCheck/model"
+	"gsCheck/utils"
 	"html/template"
 	"io/fs"
 	"log"
@@ -18,8 +19,8 @@ import (
 var content embed.FS
 
 func main() {
+	utils.InitCheckFuncMap()
 	r := gin.Default()
-
 	temp := template.Must(template.New("").ParseFS(content, "dist/*.html"))
 	r.SetHTMLTemplate(temp)
 	distFS, _ := fs.Sub(content, "dist")
@@ -28,7 +29,9 @@ func main() {
 		context.HTML(200, "index.html", "")
 	})
 	log.Println("已开启前后端整合模式！")
-
+	r.GET("/api/update", func(c *gin.Context) {
+		c.String(200, utils.InitCheckFuncMap())
+	})
 	r.POST("/api/upload", func(c *gin.Context) {
 		file, _ := c.FormFile("file")
 		open, _ := file.Open()
