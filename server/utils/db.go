@@ -52,6 +52,7 @@ func InitCheckFuncMap() string {
 		orgRows.Scan(&org.Dept, &org.Mkt)
 		check.MktMap[org.Mkt] = struct{}{}
 		check.OrgMap[org] = struct{}{}
+		fmt.Println(org.Mkt)
 	}
 
 	sqlStr2 := `
@@ -75,6 +76,7 @@ FROM
 		var u model.User
 		userRows.Scan(&u.Name, &u.Mkt)
 		check.UserMap[u] = struct{}{}
+		fmt.Println(u.Name,u.Mkt)
 	}
 
 	fmt.Println("数据初始化完成！")

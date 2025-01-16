@@ -49,13 +49,13 @@ jobs:
         mv server/conf.yaml gsCheck/
         
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
        name: gscheck-artifact
        path: ${{ github.workspace }}/gsCheck
 
     - name: Download a Build Artifact
-      uses: actions/download-artifact@v2.1.1
+      uses: actions/download-artifact@v4
       with:
        name: gscheck-artifact
     
