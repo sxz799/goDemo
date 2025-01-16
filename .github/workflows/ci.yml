@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     container: docker.io/centos:7
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4.2.2
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4.1.0
       with:
         node-version: ${{ matrix.node-version }}
         
@@ -34,7 +34,7 @@ jobs:
         yum install -y wget tar gcc automake autoconf libtool make
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5.2.0
       with:
         go-version: 1.21
 
