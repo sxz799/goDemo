@@ -74,7 +74,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 
 	titleRight := false
 	for _, cell := range titleRow {
-		if len(cell) > 0 && strings.Contains("账簿名称	资产名称	资产编号	资产类别名称	折旧方法名称	资产状态名称	资产来源名称	入账日期	所属部门名称	资产数量	资产原值	使用月份	入账折旧	净残值率(%)	净残值	减值准备	月折旧率(%)	月折旧额	年折旧率(%)	年折旧额	已提月份	剩余月份	累计折旧	品牌型号	使用人名称	计量单位	存放地点名称	责任人名称	使用部门名称	是否计提折旧	管理类别	实际数量	标准资产型号	生产日期	设备序列号	GMP编码	生产厂商	备注	供应商编码	契税	车辆购置税", cell) {
+		if len(cell) > 0 && strings.Contains("账簿名称 资产名称	资产编号	资产类别名称	折旧方法名称	资产状态名称	资产来源名称	入账日期	所属部门名称	资产数量	资产原值	使用月份	入账折旧	净残值率(%)	净残值	减值准备	月折旧率(%)	月折旧额	年折旧率(%)	年折旧额	已提月份	剩余月份	累计折旧	品牌型号	使用人名称 计量单位	存放地点名称 责任人名称 使用部门名称	是否计提折旧	管理类别	实际数量	标准资产型号 生产日期	设备序列号 GMP编码 生产厂商	备注	供应商编码 契税 车辆购置税", cell) {
 			titleRight = true
 			break
 		}
@@ -117,7 +117,7 @@ func PreCheck(fileName, fileType string, r io.Reader) (num int, errs []model.Err
 	if !strings.Contains(titleRowStr, "是否计提折旧") && capType != "低值易耗品" {
 		errs = append(errs, model.ErrInfo{
 			ErrorMsg: "表格结构错误",
-			FixMsg:   "不可缺少 是否计提折旧 列!",
+			FixMsg:   "非低值易耗品不可缺少[是否计提折旧]!",
 		})
 	}
 

@@ -26,11 +26,6 @@ func init() {
 	TitleCheckFuncMap["已提月份"] = IsIntNum
 	TitleCheckFuncMap["剩余月份"] = IsIntNum
 	TitleCheckFuncMap["入账日期"] = IsCorrectBuyDate
-	//TitleCheckFuncMap["单位名称"] = IsCorrectMKT
-	//TitleCheckFuncMap["使用部门"] = IsCorrectDept
-	//TitleCheckFuncMap["使用人"] = IsCorrectUser
-	//TitleCheckFuncMap["部门名称"] = IsCorrectDept
-	//TitleCheckFuncMap["责任人"] = IsCorrectUser
 	TitleCheckFuncMap["使用月份"] = IsIntNum
 	TitleCheckFuncMap["存放地点名称"] = IsCorrectPlace
 	TitleCheckFuncMap["备注"] = IsCorrectMemo
