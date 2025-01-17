@@ -232,13 +232,13 @@ func check(capType string, rows [][]string) (num int, errs []model.ErrInfo) {
 				})
 			}
 
-			if capNum > 1 && capRealNum > 1 {
-				errs = append(errs, model.ErrInfo{
-					Line:     index + 4,
-					ErrorMsg: "资产数量和实际数量关系异常",
-					FixMsg:   "资产数量和实际数量不可同时大于1",
-				})
-			}
+			//if capNum > 1 && capRealNum > 1 {
+			//	errs = append(errs, model.ErrInfo{
+			//		Line:     index + 4,
+			//		ErrorMsg: "资产数量和实际数量关系异常",
+			//		FixMsg:   "资产数量和实际数量不可同时大于1",
+			//	})
+			//}
 
 			//if capRealNum > 1 && capRealNum < 10 {
 			//	errs = append(errs, model.ErrInfo{

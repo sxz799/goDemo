@@ -19,13 +19,11 @@ func InitCheckFuncMap() string {
 	buildUrl := go_ora.BuildUrl("10.160.55.112", 1521, "csrac", "capital", "capital", nil)
 	conn, err := sql.Open("oracle", buildUrl)
 	if err != nil {
-		fmt.Println("ERR1,链接数据库失败")
-		panic(err)
+		return "ERR1,链接数据库失败" + err.Error()
 	}
 	err2 := conn.Ping()
 	if err2 != nil {
-		fmt.Println("ERR2,测试数据库失败")
-		panic(err2)
+		return "ERR2,测试数据库失败" + err2.Error()
 	}
 
 	sqlStr1 := `
@@ -42,17 +40,15 @@ func InitCheckFuncMap() string {
 	orgRows, err3 := conn.Query(sqlStr1)
 	defer orgRows.Close()
 	if err3 != nil {
-		fmt.Println("查询组织架构失败")
-		panic(err3)
+		return "ERR3,查询组织架构失败" + err3.Error()
 	}
 	check.OrgMap = make(map[model.Organization]struct{})
 	check.MktMap = make(map[string]struct{})
 	for orgRows.Next() {
 		var org model.Organization
-		orgRows.Scan(&org.Dept, &org.Mkt)
+		orgRows.Scan(&org.Mkt, &org.Dept)
 		check.MktMap[org.Mkt] = struct{}{}
 		check.OrgMap[org] = struct{}{}
-		fmt.Println(org.Mkt)
 	}
 
 	sqlStr2 := `
@@ -65,24 +61,32 @@ FROM
 	LEFT JOIN SYS_DEPT d ON um.mkt = d.DEPT_CODE
 
 `
-	userRows, err3 := conn.Query(sqlStr2)
+	userRows, err4 := conn.Query(sqlStr2)
 	defer userRows.Close()
-	if err3 != nil {
-		fmt.Println("查询用户信息失败")
-		panic(err3)
+	if err4 != nil {
+		return "ERR4,查询用户信息失败" + err4.Error()
 	}
 	check.UserMap = make(map[model.User]struct{})
 	for userRows.Next() {
 		var u model.User
 		userRows.Scan(&u.Name, &u.Mkt)
 		check.UserMap[u] = struct{}{}
-		fmt.Println(u.Name,u.Mkt)
 	}
-
-	fmt.Println("数据初始化完成！")
-
 	s.WriteString(fmt.Sprintf("门店数量：%d\n", len(check.MktMap)))
 	s.WriteString(fmt.Sprintf("部门数量：%d\n", len(check.OrgMap)))
 	s.WriteString(fmt.Sprintf("员工数量：%d\n", len(check.UserMap)))
+	s.WriteString("\n===门店信息===\n")
+	for k, _ := range check.MktMap {
+		s.WriteString(k + " " + "\n")
+	}
+	s.WriteString("\n====部门信息====\n")
+	for k, _ := range check.OrgMap {
+		s.WriteString(k.Mkt + " " + k.Dept + "\n")
+	}
+	s.WriteString("\n===用户新小=====\n")
+	for k, _ := range check.UserMap {
+		s.WriteString(k.Name + " " + k.Mkt + "\n")
+	}
+	s.WriteString("\n========\n")
 	return s.String()
 }
