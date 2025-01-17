@@ -4,7 +4,7 @@
     <a-col :span="22">
       <div style="padding-inline: 20%;">
         <a-card style="text-align: center">
-          <h2 style="color: #0034ff">资产系统导入模板检验工具</h2>
+          <h2 style="color: #0034ff">资产系统导入模板检验工具V20250117</h2>
 
           <a-upload-dragger name="file" :before-upload="beforeUpload"
                             :showUploadList="false"

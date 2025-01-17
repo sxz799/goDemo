@@ -11,7 +11,7 @@ module.exports = defineConfig({
     }
   },
   transpileDependencies: true,
-  //sed_tag/publicPath: "/dist", //加上这一行即可
+  publicPath: process.env.VUE_APP_BASE_PATH, //加上这一行即可
   productionSourceMap: false, // 生产环境不产生未加密的map文件
   devServer: {
     port: 4001,
